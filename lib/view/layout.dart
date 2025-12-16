@@ -1,9 +1,12 @@
+
+import 'package:app_eyewear/controller/user_controller.dart';
 import 'package:app_eyewear/view/carrinho/carrinho_page.dart';
 import 'package:app_eyewear/view/compras/compras_page.dart';
 import 'package:app_eyewear/view/home/home_page.dart';
 import 'package:app_eyewear/view/login/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 
 class Layout {
   static Widget render(
@@ -13,6 +16,10 @@ class Layout {
     Widget? floatingActionButton,
     int? bottomItemSelected,
   }) {
+
+      var user = Provider.of<UserController>(context);
+    
+  
     return Scaffold(
       body: SafeArea(
         child: Stack(
@@ -99,7 +106,11 @@ class Layout {
             Navigator.of(context).pushNamed(ComprasPage.tag);
             break;
             case 3:
-            Navigator.of(context).pushNamed(LoginPage.tag);
+            // Desloga Usuario
+            user.signOut();
+            // Navega para pagina de login
+            Navigator.of(context).popUntil((route) => route.isFirst);
+            Navigator.of(context).popAndPushNamed(LoginPage.tag);
             break;
           }
         },

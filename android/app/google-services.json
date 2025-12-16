@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "86569291290",
+    "project_id": "sunpalm-edf96",
+    "storage_bucket": "sunpalm-edf96.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:86569291290:android:f990f8be62f205f9574ba3",
+        "android_client_info": {
+          "package_name": "com.example.app_eyewear"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDwGzJ2jfoyFjrLRimM8_CGFuHYyOd_P-I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
