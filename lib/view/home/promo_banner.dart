@@ -12,16 +12,16 @@ class PromoBanner extends StatelessWidget {
         return Container(
           margin: EdgeInsets.only(left: 20, right: 20),
           width: MediaQuery.of(context).size.width - 40,
+          foregroundDecoration: BoxDecoration(
+            border: Border.all(width: 3, color: Layout.light(.8)),
+            borderRadius: BorderRadius.circular(25),
+          ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(25),
             child: Image.asset(
               'assets/images/promocoes/promo-${i + 1}.png',
               fit: BoxFit.cover,
             ),
-          ),
-          foregroundDecoration: BoxDecoration(
-            border: Border.all(width: 3, color: Layout.light(.8)),
-            borderRadius: BorderRadius.circular(25),
           ),
         );
       },

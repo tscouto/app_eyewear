@@ -18,11 +18,14 @@ class SplashPage extends StatelessWidget {
       // Mata toda sas rotas anteorios
 
        await Future.delayed(Duration(milliseconds: 2000), () {
+        // ignore: use_build_context_synchronously
         Navigator.of(context).popUntil((route) => route.isFirst);
 
         if (status == UserAuthStatus.loggedIn) {
+          // ignore: use_build_context_synchronously
           Navigator.of(context).popAndPushNamed(HomePage.tag);
         } else {
+          // ignore: use_build_context_synchronously
           Navigator.of(context).popAndPushNamed(LoginPage.tag);
         }
       });

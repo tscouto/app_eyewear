@@ -7,20 +7,16 @@ import 'package:flutter/material.dart';
 class HomePage extends StatelessWidget {
   static String tag = '/home-page';
 
+  const HomePage({super.key});
+
   @override
   Widget build(BuildContext context) {
     var content = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Expanded(
-          flex: 1,
-          child: PromoBanner(),
-        ),
+        Expanded(flex: 1, child: PromoBanner()),
         SizedBox(height: 20),
-        Expanded(
-          flex: 2,
-          child: HomeDestaques(),
-        ),
+        Expanded(flex: 2, child: HomeDestaques()),
         SizedBox(height: 20),
         Padding(
           padding: const EdgeInsets.only(left: 30),
@@ -31,7 +27,7 @@ class HomePage extends StatelessWidget {
             ).textTheme.titleLarge?.copyWith(color: Layout.light()),
           ),
         ),
-        Container(
+        SizedBox(
           height: 90,
           child: SingleChildScrollView(
             physics: NeverScrollableScrollPhysics(),

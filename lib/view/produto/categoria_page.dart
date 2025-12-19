@@ -107,7 +107,7 @@ class CategoriaPage extends StatelessWidget {
                 color: Layout.dark(.1)
               )
             ]),
-            child: Container(
+            child: SizedBox(
               height: 70,
               child: Row(
                 children: <Widget>[
@@ -130,7 +130,12 @@ class CategoriaPage extends StatelessWidget {
                 )),
                 SizedBox(width: 10),
                 IconButton(onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProdutoPage(id)));
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => ProdutoPage(id.toString()),
+                    ),
+                  );
+                // ignore: deprecated_member_use
                 }, icon: FaIcon(FontAwesomeIcons.angleDoubleRight, color: Layout.primaryLight(),)),
                 SizedBox()
                 ],

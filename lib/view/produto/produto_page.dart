@@ -5,7 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 class ProdutoPage extends StatefulWidget {
   const ProdutoPage(this.id, {super.key});
   static String tag = '/produto-page';
-  final int id;
+  final String id;
 
   @override
   State<ProdutoPage> createState() => _ProdutoPageState();
@@ -25,7 +25,7 @@ class _ProdutoPageState extends State<ProdutoPage> {
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(25)),
       child: Column(
         children: [
-          Container(
+          SizedBox(
             height: MediaQuery.of(context).size.width / 2,
             child: Stack(
               children: [
@@ -35,7 +35,7 @@ class _ProdutoPageState extends State<ProdutoPage> {
                   physics: PageScrollPhysics(),
                   itemCount: 3,
                   itemBuilder: (BuildContext context, int i) {
-                    return Container(
+                    return SizedBox(
                       width: listViewItemWidth,
                       child: ClipRRect(
                         borderRadius: BorderRadius.only(
@@ -69,7 +69,7 @@ class _ProdutoPageState extends State<ProdutoPage> {
                     ),
                   ),
                 ),
-                Container(
+                SizedBox(
                   width: listViewItemWidth,
                   child: Align(
                     alignment: Alignment.centerLeft,
@@ -89,7 +89,7 @@ class _ProdutoPageState extends State<ProdutoPage> {
                     ),
                   ),
                 ),
-                Container(
+                SizedBox(
                   width: listViewItemWidth,
                   child: Align(
                     alignment: Alignment.centerRight,
@@ -124,7 +124,7 @@ class _ProdutoPageState extends State<ProdutoPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Container(
+                      SizedBox(
                         width: (MediaQuery.of(context).size.width - 60) * .65,
                         child: Text(
                           'R\$ 150,00',

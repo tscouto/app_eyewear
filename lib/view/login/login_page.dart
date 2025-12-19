@@ -1,18 +1,23 @@
+import 'package:app_eyewear/controller/user_controller.dart';
 import 'package:app_eyewear/view/home/home_page.dart';
 import 'package:app_eyewear/view/layout.dart';
 import 'package:app_eyewear/view/login/cadastro_page.dart';
 import 'package:app_eyewear/view/login/login_recuperar_page.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
+  LoginPage({super.key});
 
   static String tag = '/login-page';
 
   final GlobalKey<FormState> _form = GlobalKey<FormState>();
 
+  final Map<String, dynamic> _data = {};
+
   @override
   Widget build(BuildContext context) {
+    var userController = Provider.of<UserController>(context);
     return Form(
       key: _form,
       child: Scaffold(
@@ -62,28 +67,59 @@ class LoginPage extends StatelessWidget {
                               decoration: InputDecoration(
                                 hintText: 'Email',
                                 focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: Layout.primary()),
+                                  borderSide: BorderSide(
+                                    color: Layout.primary(),
+                                  ),
                                 ),
                               ),
+                              keyboardType: TextInputType.emailAddress,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Informe seu email';
+                                }
+                                return null;
+                              },
+                              onSaved: (value) {
+                                _data['email'] = value;
+                                // user.email = value as String;
+                              },
                             ),
                             SizedBox(height: 20),
                             TextFormField(
                               decoration: InputDecoration(
                                 hintText: 'Senha',
                                 focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: Layout.primary()),
+                                  borderSide: BorderSide(
+                                    color: Layout.primary(),
+                                  ),
                                 ),
                               ),
+                              obscureText: true,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Informe a senha';
+                                }
+                                return null;
+                              },
+
+                              onSaved: (value) {
+                                _data['senha'] = value;
+                                // user.senha = value as String;
+                              },
                             ),
                             Align(
                               alignment: Alignment.centerRight,
                               child: TextButton(
                                 onPressed: () {
-                                  Navigator.of(context).pushNamed(LoginRecuperarPage.tag);
+                                  Navigator.of(
+                                    context,
+                                  ).pushNamed(LoginRecuperarPage.tag);
                                 },
                                 child: Text(
                                   'Esqueci minha senha',
-                                  style: TextStyle(color: Layout.secondaryDark()),
+                                  style: TextStyle(
+                                    color: Layout.secondaryDark(),
+                                  ),
                                 ),
                               ),
                             ),
@@ -102,9 +138,51 @@ class LoginPage extends StatelessWidget {
                                     horizontal: 20,
                                   ),
                                 ),
-      
-                                onPressed: () {
-                                  Navigator.of(context).popAndPushNamed(HomePage.tag);
+
+                                onPressed: () async {
+                                  if (_form.currentState!.validate()) {
+                                    _form.currentState!.save();
+
+                                    String? error = await userController
+                                        .entrarPorEmailSenha(
+                                          email: _data['email'],
+                                          senha: _data['senha'],
+                                        );
+
+                                    if (error != null) {
+                                      ScaffoldMessenger.of(
+                                        // ignore: use_build_context_synchronously
+                                        context,
+                                      ).showSnackBar(
+                                        SnackBar(content: Text(error)),
+                                      );
+                                    } else {
+                                      ScaffoldMessenger.of(
+                                        // ignore: use_build_context_synchronously
+                                        context,
+                                      ).showSnackBar(
+                                        const SnackBar(
+                                          content: Text(
+                                            'Login realizado com sucesso!',
+                                          ),
+                                         
+                                          duration: Duration(seconds: 2),
+                                        ),
+                                      );
+
+                                      await Future.delayed(
+                                        const Duration(seconds: 2),
+                                      );
+                                      Navigator.of(
+                                        // ignore: use_build_context_synchronously
+                                        context,
+                                      ).popUntil((route) => route.isFirst);
+                                       Navigator.of(
+                                        // ignore: use_build_context_synchronously
+                                        context,
+                                      ).pushReplacementNamed(HomePage.tag);
+                                    }
+                                  }
                                 },
                                 child: Text(
                                   'Entrar',

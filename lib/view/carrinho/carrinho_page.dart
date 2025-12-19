@@ -1,16 +1,22 @@
-import 'package:app_eyewear/view/home/home_page.dart';
+
 import 'package:app_eyewear/view/layout.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class CarrinhoPage extends StatelessWidget {
+class CarrinhoPage extends StatefulWidget {
   const CarrinhoPage({super.key});
 
   static String tag = '/carrinho';
 
   @override
+  State<CarrinhoPage> createState() => _CarrinhoPageState();
+}
+
+class _CarrinhoPageState extends State<CarrinhoPage> {
+  bool temFrete = false;
+
+  @override
   Widget build(BuildContext context) {
-    var temFrete = false;
     var content = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -43,7 +49,7 @@ class CarrinhoPage extends StatelessWidget {
                     ),
                   ],
                 ),
-                child: Container(
+                child: SizedBox(
                   height: 70,
                   child: Row(
                     children: <Widget>[
@@ -76,12 +82,13 @@ class CarrinhoPage extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
                           Text('R\$ 125,50'),
-                          Container(
+                          SizedBox(
                             width: 70,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: <Widget>[
                                 GestureDetector(
+                                  // ignore: avoid_print
                                   onTap: () => print('Esquerda'),
                                   child: FaIcon(
                                     FontAwesomeIcons.chevronLeft,
@@ -90,6 +97,7 @@ class CarrinhoPage extends StatelessWidget {
                                 ),
                                 Text('1', style: TextStyle(fontSize: 18)),
                                 GestureDetector(
+                                  // ignore: avoid_print
                                   onTap: () => print('Direita'),
                                   child: FaIcon(
                                     FontAwesomeIcons.chevronRight,
@@ -124,14 +132,16 @@ class CarrinhoPage extends StatelessWidget {
                       width: 80,
                       color: Layout.dark(.1),
                       padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: temFrete
-                          ? Text('PAC', style: TextStyle(fontSize: 24),textAlign: TextAlign.center,)
-                          : Column(
+                      child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
                                 IconButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    setState(() {
+                                      temFrete = true;
+                                    });
+                                  },
                                   icon: FaIcon(
                                     FontAwesomeIcons.truck,
                                     color: Layout.primary(),
@@ -162,16 +172,14 @@ class CarrinhoPage extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Container(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text('R\$ 150,00'),
-                          Text('R\$ 15,00'),
-                          SizedBox(height: 10),
-                          Text('R\$ 165,80', style: TextStyle(fontSize: 18)),
-                        ],
-                      ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text('R\$ 150,00'),
+                        Text('R\$ 15,00'),
+                        SizedBox(height: 10),
+                        Text('R\$ 165,80', style: TextStyle(fontSize: 18)),
+                      ],
                     ),
                   ],
                 ),
@@ -195,6 +203,7 @@ class CarrinhoPage extends StatelessWidget {
               ),
               onPressed: temFrete
                   ? () {
+                      // ignore: avoid_print
                       print('Finalizar compra');
                     }
                   : null,

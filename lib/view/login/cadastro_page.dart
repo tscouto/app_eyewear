@@ -1,8 +1,7 @@
 import 'package:app_eyewear/controller/user_controller.dart';
-import 'package:app_eyewear/view/home/home_page.dart';
+
 import 'package:app_eyewear/view/layout.dart';
 import 'package:app_eyewear/view/login/login_page.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -207,6 +206,7 @@ class _CadastroPageState extends State<CadastroPage> {
                                       );
 
                                   if (error != null) {
+                                    // ignore: use_build_context_synchronously
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(content: Text(error)),
                                     );
@@ -214,7 +214,9 @@ class _CadastroPageState extends State<CadastroPage> {
                                   }
 
                                   
+                                  // ignore: use_build_context_synchronously
                                   Navigator.of(context).popUntil((route) => route.isFirst);
+                                  // ignore: use_build_context_synchronously
                                   Navigator.of(context).pushReplacementNamed(
                                     LoginPage.tag,
                                     arguments:

@@ -7,8 +7,10 @@ class TesteController extends InheritedWidget {
   final int id;
   final String name;
 
-  TesteController({Key? key, required this.id, required this.name, required this.child}) : super(key: key, child: child);
+  const TesteController({super.key, required this.id, required this.name, required this.child}) : super(child: child);
 
+  @override
+  // ignore: overridden_fields
   final Widget child;
 
   static TesteController? of(BuildContext context) {

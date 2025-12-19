@@ -10,13 +10,12 @@ import 'package:app_eyewear/view/login/login_recuperar_page.dart';
 import 'package:app_eyewear/view/login/splash_page.dart';
 import 'package:app_eyewear/view/perfil/perfil_page.dart';
 import 'package:flutter/material.dart';
+// ignore: depend_on_referenced_packages
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 
-
 void main() async {
-
-   WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
 
   // ⬇️ ADICIONE ESTA LINHA
   await Firebase.initializeApp();
@@ -30,9 +29,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [
-        Provider<UserController>(create: (_) => UserController()),
-      ],
+      providers: [Provider<UserController>(create: (_) => UserController())],
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(

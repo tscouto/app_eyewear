@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class HomeDestaques extends StatelessWidget {
+  const HomeDestaques({super.key});
+
   @override
   Widget build(BuildContext context) {
     return ListView(
@@ -20,6 +22,10 @@ class HomeDestaques extends StatelessWidget {
             children: <Widget>[
               Expanded(
                 child: ClipRRect(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(25),
+                    topRight: Radius.circular(25),
+                  ),
                   child: Stack(
                     children: <Widget>[
                       Image.asset(
@@ -49,10 +55,6 @@ class HomeDestaques extends StatelessWidget {
                         ),
                       ),
                     ],
-                  ),
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(25),
-                    topRight: Radius.circular(25),
                   ),
                 ),
               ),

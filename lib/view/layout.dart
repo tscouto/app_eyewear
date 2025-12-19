@@ -1,7 +1,7 @@
-
 import 'package:app_eyewear/controller/user_controller.dart';
 import 'package:app_eyewear/view/carrinho/carrinho_page.dart';
 import 'package:app_eyewear/view/compras/compras_page.dart';
+import 'package:app_eyewear/view/favoritos/favoritos_page.dart';
 import 'package:app_eyewear/view/home/home_page.dart';
 import 'package:app_eyewear/view/login/login_page.dart';
 import 'package:flutter/material.dart';
@@ -16,10 +16,8 @@ class Layout {
     Widget? floatingActionButton,
     int? bottomItemSelected,
   }) {
+    var userController = Provider.of<UserController>(context);
 
-      var user = Provider.of<UserController>(context);
-    
-  
     return Scaffold(
       body: SafeArea(
         child: Stack(
@@ -43,20 +41,39 @@ class Layout {
                         padding: EdgeInsetsGeometry.fromLTRB(30, 20, 10, 20),
                         child: FaIcon(
                           FontAwesomeIcons.userGear,
-                          
+
                           color: Layout.light(),
                           size: 24,
                         ),
-                        
                       ),
-                      Expanded(child: Text('Tiago Couto', style: Theme.of(context).textTheme.labelMedium?.copyWith(color: Layout.light(),fontSize:18 ,fontStyle: FontStyle.italic),)),
-                      
-                      Padding(padding: EdgeInsetsGeometry.only(right: 30),
-                      child: GestureDetector(onTap: () =>  Navigator.of(context).pushNamed(CarrinhoPage.tag), child: Row(children: <Widget>[
-                        FaIcon(FontAwesomeIcons.bagShopping, color: Layout.primaryLight(), size: 24,)
-                      ],),)),
-                      
-               
+                      Expanded(
+                        child: Text(
+                          userController.user?.displayName ?? '',
+                          style: Theme.of(context).textTheme.labelMedium
+                              ?.copyWith(
+                                color: Layout.light(),
+                                fontSize: 18,
+                                fontStyle: FontStyle.italic,
+                              ),
+                        ),
+                      ),
+
+                      Padding(
+                        padding: EdgeInsetsGeometry.only(right: 30),
+                        child: GestureDetector(
+                          onTap: () =>
+                              Navigator.of(context).pushNamed(CarrinhoPage.tag),
+                          child: Row(
+                            children: <Widget>[
+                              FaIcon(
+                                FontAwesomeIcons.bagShopping,
+                                color: Layout.primaryLight(),
+                                size: 24,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -98,27 +115,30 @@ class Layout {
         backgroundColor: Layout.light(),
         type: BottomNavigationBarType.fixed,
         onTap: (int i) {
-          switch(i) {
+          switch (i) {
             case 0:
-            Navigator.of(context).pushNamed(HomePage.tag);
-            break;
+              Navigator.of(context).pushNamed(HomePage.tag);
+              break;
             case 1:
-            Navigator.of(context).pushNamed(ComprasPage.tag);
-            break;
+              Navigator.of(context).pushNamed(ComprasPage.tag);
+              break;
+                case 2:
+              Navigator.of(context).pushNamed(FavoritosPage.tag);
+              break;
             case 3:
-            // Desloga Usuario
-            user.signOut();
-            // Navega para pagina de login
-            Navigator.of(context).popUntil((route) => route.isFirst);
-            Navigator.of(context).popAndPushNamed(LoginPage.tag);
-            break;
+              // Desloga Usuario
+              userController.signOut();
+              // Navega para pagina de login
+              Navigator.of(context).popUntil((route) => route.isFirst);
+              Navigator.of(context).popAndPushNamed(LoginPage.tag);
+              break;
           }
         },
       ),
     );
   }
 
-    static List<Map<String, dynamic>> categorias = const [
+  static List<Map<String, dynamic>> categorias = const [
     {'id': 1, 'icon': Icons.favorite, 'text': 'Estilo'},
     {'id': 2, 'icon': Icons.filter_drama, 'text': 'Teen'},
     {'id': 3, 'icon': Icons.flight, 'text': 'Viagem'},
@@ -129,8 +149,8 @@ class Layout {
     {'id': 8, 'icon': Icons.thumb_up, 'text': 'Classico'},
   ];
 
-    static Map<String ,dynamic > cateoriaPorId (int id) {
-      return Layout.categorias.firstWhere((e) =>  e['id'] == id);
+  static Map<String, dynamic> cateoriaPorId(int id) {
+    return Layout.categorias.firstWhere((e) => e['id'] == id);
   }
 
   static Color primary([double opacity = 1]) =>
@@ -141,12 +161,14 @@ class Layout {
       Color(0xff123D27).withValues(alpha: opacity);
 
   static Color secondary([double opacity = 1]) =>
+      // ignore: use_full_hex_values_for_flutter_colors
       Color(0xffddcc199).withValues(alpha: opacity);
   static Color secondaryLight([double opacity = 1]) =>
       Color(0xffE0CF9D).withValues(alpha: opacity);
 
   static Color secondaryDark([double opacity = 1]) =>
-      Color(0xffFFCE9150).withValues(alpha: opacity);
+      // ignore: use_full_hex_values_for_flutter_colors
+      Color(0xffffce9150).withValues(alpha: opacity);
   static Color secondaryHighLight([double opacity = 1]) =>
       Color(0xffFDAC25).withValues(alpha: opacity);
 
@@ -154,5 +176,4 @@ class Layout {
       Color(0xffF0ECE1).withValues(alpha: opacity);
   static Color dark([double opacity = 1]) =>
       Color(0xff333333).withValues(alpha: opacity);
-
 }
