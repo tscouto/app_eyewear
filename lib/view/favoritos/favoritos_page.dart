@@ -42,22 +42,47 @@ class FavoritosPage extends StatelessWidget {
           shrinkWrap: true,
           itemCount: snapshot.data?.docs.length,
           itemBuilder: (BuildContext context, int i) {
-            var item = snapshot.data!.docs[i];
+            var favoritoDoc = snapshot.data!.docs[i];
+            var dadosFavorito = favoritoDoc.data() as Map<String, dynamic>;
+            var favorito = FavoritoModel.fromJson(
+              favoritoDoc.reference,
+              dadosFavorito,
+            );
 
-            // var prodRef =  item.data['fk_produto'] as DocumentReference;
-            // prodRef.get().then((docSnap) {
-            //     var produto = ProdutoModel.fromJson(item.data['fk_produto'], docSnap.data);
-            //     var  favoritoData = item.data;
-            //     favoritoData['fk_produto'] = produto;
+            favorito.loadProduto(dadosFavorito['fk_produto']).then((value) {
+              print(favorito.toJson());
+            });
+            // bool jaExecutou = false;
 
-            //     var favorito = FavoritoModel.fromJson(item.reference, favoritoData);
+            // if (!jaExecutou) {
+            //   jaExecutou = true;
+            //   FirebaseFirestore.instance
+            //       .doc('/favorito/IY4yfpxmXCjpXebGNoft')
+            //       .get()
+            //       .then((docSnp) async {
+            //         final favorito = FavoritoModel.fromJson(
+            //           docSnp.reference,
+            //           docSnp.data() as Map<String, dynamic>,
+            //         );
 
-            // }); 
+            //         favorito
+            //             .loadProduto(
+            //               docSnp.get('fk_produto') as DocumentReference,
+            //             )
+            //             .then((value) {
+            //               FirebaseFirestore.instance
+            //                   .collection('favorito')
+            //                   .add(favorito.toJson());
+            //             });
+            //         // // carrega o produto
+            //         await favorito.loadProduto(
+            //           docSnp.get('fk_produto') as DocumentReference,
+            //         );
+            //       });
+            // }
 
             final DocumentReference produtoRef =
-                (item.data() as Map<String, dynamic>)['fk_produto'];
-            //Busca os dados do produto;
-            final futureProduto = produtoRef.get();
+                favoritoDoc.get('fk_produto') as DocumentReference;
 
             return GestureDetector(
               onTap: () {
@@ -73,12 +98,12 @@ class FavoritosPage extends StatelessWidget {
                   color: Layout.light(),
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: FutureBuilder(
-                  future: futureProduto,
+                child: FutureBuilder<ProdutoModel>(
+                  future: favorito.loadProduto(produtoRef),
                   builder:
                       (
                         BuildContext context,
-                        AsyncSnapshot<DocumentSnapshot> snpsProd,
+                        AsyncSnapshot<ProdutoModel> snpsProd,
                       ) {
                         if (snpsProd.hasError) {
                           return Center(child: Text('Erro: ${snpsProd.error}'));
@@ -86,7 +111,12 @@ class FavoritosPage extends StatelessWidget {
 
                         if (snpsProd.connectionState ==
                             ConnectionState.waiting) {
-                          return Center(child: LinearProgressIndicator());
+                          return Center(
+                            child: Padding(
+                              padding: const EdgeInsets.all(25),
+                              child: LinearProgressIndicator(),
+                            ),
+                          );
                         }
                         if (!snpsProd.hasData) {
                           return const SizedBox(
@@ -95,16 +125,9 @@ class FavoritosPage extends StatelessWidget {
                           );
                         }
 
-                        if (!snpsProd.data!.exists) {
-                          return const SizedBox.shrink();
-                        }
-
-                        final prodData =
-                            snpsProd.data!.data() as Map<String, dynamic>;
-                        final titulo = (prodData['titulo'] as String?) ?? '';
-                        final chamada = (prodData['chamada'] as String?) ?? '';
-
-                        print(snpsProd.data?.data());
+                        final produto = snpsProd.data!;
+                        final titulo = produto.titulo ?? '';
+                        final chamada = produto.chamada ?? '';
 
                         return ListTile(
                           contentPadding: EdgeInsets.fromLTRB(10, 0, 10, 0),
@@ -133,12 +156,11 @@ class FavoritosPage extends StatelessWidget {
                           subtitle: Text(chamada.toString()),
                           trailing: IconButton(
                             onPressed: () {
-                              item.reference.update({'excluido': true});
+                              favoritoDoc.reference.update({'excluido': true});
                             },
                             icon: FaIcon(
-                              i.isEven
-                                  ? FontAwesomeIcons.solidHeart
-                                  : FontAwesomeIcons.heart,
+                              FontAwesomeIcons.solidHeart,
+
                               color: Colors.red[300],
                             ),
                           ),

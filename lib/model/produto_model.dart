@@ -1,19 +1,20 @@
-import 'package:app_eyewear/model/model_interface.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'abstract_model.dart';
 
-
-class ProdutoModel implements ModelInterface {
+class ProdutoModel extends AbstractModel {
   @override
-  final DocumentReference  docRef;
+  String get path => 'produto';
 
   @override
-  bool excluido =false;
+  final DocumentReference docRef;
+
+  @override
+  bool excluido = false;
 
   final String? titulo;
   final String? chamada;
   final String? detalhe;
   final double? preco;
-  final DocumentReference? fkCategoria;
 
   ProdutoModel({
     required this.docRef,
@@ -21,7 +22,6 @@ class ProdutoModel implements ModelInterface {
     this.chamada,
     this.detalhe,
     this.preco,
-    this.fkCategoria,
     this.excluido = false,
   });
 
@@ -30,6 +30,25 @@ class ProdutoModel implements ModelInterface {
       chamada = json['chamada'] as String?,
       detalhe = json['detalhe'] as String?,
       preco = (json['preco'] as num?)?.toDouble(),
-      fkCategoria = json['fk_categoria'] as DocumentReference?,
       excluido = json['excluido'] ?? false;
+
+  @override
+  Map<String, dynamic> toJson({bool fullJson = false}) => {
+    'titulo': titulo,
+    'chamada': chamada,
+    'detalhe': detalhe,
+    'preco': preco,
+    'excluido': excluido,
+  };
+
+  static Future<ProdutoModel> get(String documentPath, {full = false}) async {
+    var item = await FirebaseFirestore.instance.doc(documentPath).get();
+    return ProdutoModel.fromJson(
+      item.reference,
+      item.data() as Map<String, dynamic>,
+    );
+  }
+
+  @override
+  String toString() => 'produto/${docRef.id}';
 }
