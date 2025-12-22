@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:app_eyewear/model/categoria_model.dart';
 import 'package:app_eyewear/view/layout.dart';
 import 'package:app_eyewear/view/produto/categoria_page.dart';
 import 'package:flutter/material.dart';
@@ -7,8 +8,8 @@ import 'package:flutter/material.dart';
 enum SweypDirection { left, right }
 
 class RodaCategoria extends StatefulWidget {
-  const RodaCategoria({super.key});
-
+  const RodaCategoria(this.categorias, {super.key});
+  final List<CategoriaModel>? categorias;
   @override
   State<RodaCategoria> createState() => _RodaCategoriaState();
 }
@@ -77,7 +78,7 @@ class _RodaCategoriaState extends State<RodaCategoria>
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) =>
-                      CategoriaPage( Layout.categorias[_currentItem]['id']),
+                      CategoriaPage(widget.categorias![_currentItem]),
                 ),
               );
             },
@@ -106,20 +107,20 @@ class _RodaCategoriaState extends State<RodaCategoria>
                 case SweypDirection.left:
 
                   // Informa a angulo para girar
-                  _endDeg -= (1 / Layout.categorias.length);
+                  _endDeg -= (1 / widget.categorias!.length);
                   // Troca o indice do item selecionado item do topo
 
                   _currentItem++;
-                  if (_currentItem > Layout.categorias.length - 1) {
+                  if (_currentItem > widget.categorias!.length - 1) {
                     _currentItem = 0;
                   }
                   break;
 
                 case SweypDirection.right:
-                  _endDeg += (1 / Layout.categorias.length);
+                  _endDeg += (1 / widget.categorias!.length);
                   _currentItem--;
                   if (_currentItem < 0) {
-                    _currentItem = Layout.categorias.length - 1;
+                    _currentItem = widget.categorias!.length - 1;
                   }
                   break;
                 default:
@@ -161,10 +162,10 @@ class _RodaCategoriaState extends State<RodaCategoria>
 
     // Define o fator de angulacao de cada item
     // Ou seja, o quanto cada um vai ser angulado
-    var angleFactor = (pi * 2) / Layout.categorias.length;
+    var angleFactor = (pi * 2) / widget.categorias!.length;
     var angle = angleFactor * -1;
 
-    for (Map<String, dynamic> item in Layout.categorias) {
+    for (CategoriaModel item in widget.categorias!) {
       // Aplica fator de angulacao
       angle += angleFactor;
       result.add(
@@ -182,10 +183,10 @@ class _RodaCategoriaState extends State<RodaCategoria>
               children: <Widget>[
                 Padding(
                   padding: EdgeInsets.only(top: 20),
-                  child: Icon(item['icon'], color: Layout.light(), size: 32),
+                  child: Icon(item.getIcone(), color: Layout.light(), size: 32),
                 ),
                 Text(
-                  item['text'],
+                  item.nome as String,
                   style: Theme.of(
                     context,
                   ).textTheme.titleSmall?.copyWith(color: Layout.light()),

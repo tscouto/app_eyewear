@@ -1,13 +1,16 @@
+import 'package:app_eyewear/model/categoria_model.dart';
 import 'package:app_eyewear/view/home/destaques.dart';
 import 'package:app_eyewear/view/home/promo_banner.dart';
 import 'package:app_eyewear/view/home/roda_categoria.dart';
 import 'package:app_eyewear/view/layout.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
   static String tag = '/home-page';
-
-  const HomePage({super.key});
+   
+  const HomePage( {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -31,12 +34,30 @@ class HomePage extends StatelessWidget {
           height: 90,
           child: SingleChildScrollView(
             physics: NeverScrollableScrollPhysics(),
-            child: RodaCategoria(),
+            child: FutureBuilder(
+              future: bucasListaCategorias(),
+              builder: (BuildContext context, AsyncSnapshot<List<CategoriaModel>> snapshot) {
+                if(snapshot.data == null) {
+                  return Center(child: CircularProgressIndicator());
+                }
+                return RodaCategoria(snapshot.data);
+              },
+            ),
           ),
         ),
       ],
     );
 
     return Layout.render(context, content, bottomItemSelected: 0);
+  }
+  
+  Future<List<CategoriaModel>> bucasListaCategorias() async {
+    var result = <CategoriaModel>[];
+        var query = await FirebaseFirestore.instance.collection('categoria').where('excluido', isEqualTo: false).get();
+        for(var doc in query.docs){
+         var item = CategoriaModel.fromJson(doc.reference, doc.data());
+         result.add(item);
+        }
+    return result;
   }
 }

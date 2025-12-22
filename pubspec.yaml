@@ -45,6 +45,9 @@ dependencies:
   amplify_auth_cognito: ^2.8.0
   amplify_storage_s3: ^2.8.0
   amplify_secure_storage: ^0.5.14
+  flutter_masked_text2: ^0.9.0
+
+  dio: ^5.9.0
 
   amplify_authenticator: ^2.0.0
 dev_dependencies:

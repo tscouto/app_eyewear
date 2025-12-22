@@ -4,6 +4,7 @@ import 'package:app_eyewear/view/compras/compras_page.dart';
 import 'package:app_eyewear/view/favoritos/favoritos_page.dart';
 import 'package:app_eyewear/view/home/home_page.dart';
 import 'package:app_eyewear/view/login/login_page.dart';
+import 'package:app_eyewear/view/perfil/perfil_page.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -17,6 +18,7 @@ class Layout {
     int? bottomItemSelected,
   }) {
     var userController = Provider.of<UserController>(context);
+    
     print(userController.user!.uid);
     return Scaffold(
       body: SafeArea(
@@ -37,13 +39,16 @@ class Layout {
                   color: Layout.secondary(),
                   child: Row(
                     children: [
-                      Padding(
-                        padding: EdgeInsetsGeometry.fromLTRB(30, 20, 10, 20),
-                        child: FaIcon(
-                          FontAwesomeIcons.userGear,
-
-                          color: Layout.light(),
-                          size: 24,
+                      GestureDetector(
+                        onTap: () =>
+                            Navigator.of(context).pushNamed(PerfilPage.tag),
+                        child: Padding(
+                          padding: EdgeInsets.fromLTRB(30, 20, 10, 20),
+                          child: FaIcon(
+                            FontAwesomeIcons.userGear,
+                            color: Layout.light(),
+                            size: 24,
+                          ),
                         ),
                       ),
                       Expanded(
@@ -122,7 +127,7 @@ class Layout {
             case 1:
               Navigator.of(context).pushNamed(ComprasPage.tag);
               break;
-                case 2:
+            case 2:
               Navigator.of(context).pushNamed(FavoritosPage.tag);
               break;
             case 3:

@@ -1,5 +1,6 @@
 import 'package:app_eyewear/model/model_interface.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/src/widgets/icon_data.dart';
 
 class CategoriaModel implements ModelInterface {
   @override
@@ -38,5 +39,10 @@ class CategoriaModel implements ModelInterface {
   @override
   String toString() {
     return 'categoria/${docRef.id}';
+  }
+
+  IconData? getIcone([String fontFamily = 'MaterialIcons']) {
+
+    return IconData(int.parse(icone as String), fontFamily: fontFamily);
   }
 }

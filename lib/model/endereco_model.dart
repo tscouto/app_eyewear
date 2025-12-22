@@ -12,6 +12,7 @@ class EnderecoModel extends AbstractModel {
   bool excluido;
 
   String uid; // Id do usuario no Firebase
+
   String cep;
   String rua;
   String numero;
@@ -22,6 +23,7 @@ class EnderecoModel extends AbstractModel {
 
   EnderecoModel({
     required this.uid,
+    
     this.cep = '',
     this.rua = '',
     this.numero = '',

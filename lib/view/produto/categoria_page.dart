@@ -1,13 +1,14 @@
+import 'package:app_eyewear/model/categoria_model.dart';
 import 'package:app_eyewear/view/layout.dart';
 import 'package:app_eyewear/view/produto/produto_page.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class CategoriaPage extends StatelessWidget {
-  const CategoriaPage(this.id, {super.key});
+  const CategoriaPage(this.categoria, {super.key});
   static String tag = '/categoria-page';
 
-  final int id;
+  final CategoriaModel categoria;
 
   @override
   Widget build(BuildContext context) {
@@ -86,7 +87,7 @@ class CategoriaPage extends StatelessWidget {
             ],
           ),
         ),
-        Padding(padding: const EdgeInsets.only(left: 20,top: 10,bottom: 10), child: Text('Categoria: ${Layout.cateoriaPorId(id)['text']}',style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Layout.light()),)),
+        Padding(padding: const EdgeInsets.only(left: 20,top: 10,bottom: 10), child: Text('Categoria: ${categoria.nome}',style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Layout.light()),)),
         Expanded(
           
           child: ListView.builder(
@@ -132,7 +133,7 @@ class CategoriaPage extends StatelessWidget {
                 IconButton(onPressed: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => ProdutoPage(id.toString()),
+                      builder: (context) => ProdutoPage(categoria as String),
                     ),
                   );
                 // ignore: deprecated_member_use
