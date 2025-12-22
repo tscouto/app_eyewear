@@ -35,7 +35,7 @@ class FotoModel extends AbstractModel {
   @override
   Map<String, dynamic> toJson({bool fullJson = false}) => {
         'url': url,
-        'fk_produto': fullJson ? fkProduto : fkProduto?.docRef,
+        'fk_produto': fullJson ? fkProduto : referenceFromModel(fkProduto),
         'excluido': excluido,
       };
 

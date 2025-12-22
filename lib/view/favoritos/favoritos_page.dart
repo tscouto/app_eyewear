@@ -49,9 +49,7 @@ class FavoritosPage extends StatelessWidget {
               dadosFavorito,
             );
 
-            favorito.loadProduto(dadosFavorito['fk_produto']).then((value) {
-              print(favorito.toJson());
-            });
+           
             // bool jaExecutou = false;
 
             // if (!jaExecutou) {
@@ -99,7 +97,8 @@ class FavoritosPage extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: FutureBuilder<ProdutoModel>(
-                  future: favorito.loadProduto(produtoRef),
+                  future: favorito.loadProduto(),
+
                   builder:
                       (
                         BuildContext context,

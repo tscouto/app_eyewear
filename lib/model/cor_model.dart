@@ -28,7 +28,7 @@ class CorModel extends AbstractModel {
   @override
   Map<String, dynamic> toJson({bool fullJson = false}) => {
     'texto': texto,
-    'fk_produto': fullJson ? fkProduto : fkProdutoRef,
+    'fk_produto': fullJson ? fkProduto : referenceFromModel(fkProduto),
     'excluido': excluido,
   };
 

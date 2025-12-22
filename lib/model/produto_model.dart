@@ -1,3 +1,4 @@
+import 'package:app_eyewear/model/categoria_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'abstract_model.dart';
 
@@ -6,7 +7,9 @@ class ProdutoModel extends AbstractModel {
   String get path => 'produto';
 
   @override
-  final DocumentReference docRef;
+  DocumentReference? docRef;
+  DocumentReference? fkCategoriaRef;
+  CategoriaModel? fkCategoria;
 
   @override
   bool excluido = false;
@@ -15,9 +18,15 @@ class ProdutoModel extends AbstractModel {
   final String? chamada;
   final String? detalhe;
   final double? preco;
+  final String? imagem;
+  final bool? destaque;
 
   ProdutoModel({
-    required this.docRef,
+    this.docRef,
+    this.imagem,
+    this.destaque,
+    this.fkCategoriaRef,
+    this.fkCategoria,
     this.titulo,
     this.chamada,
     this.detalhe,
@@ -26,10 +35,13 @@ class ProdutoModel extends AbstractModel {
   });
 
   ProdutoModel.fromJson(this.docRef, Map<String, dynamic> json)
-    : titulo = json['titulo'] as String?,
-      chamada = json['chamada'] as String?,
-      detalhe = json['detalhe'] as String?,
+    : titulo = json['titulo'],
+      chamada = json['chamada'],
+      detalhe = json['detalhe'],
       preco = (json['preco'] as num?)?.toDouble(),
+      imagem = json['imagem'],
+      destaque = json['destaque'],
+      fkCategoriaRef = json['fk_categoria'],
       excluido = json['excluido'] ?? false;
 
   @override
@@ -38,7 +50,10 @@ class ProdutoModel extends AbstractModel {
     'chamada': chamada,
     'detalhe': detalhe,
     'preco': preco,
+    'fk_categoria': fullJson? fkCategoria?.docRef : fkCategoriaRef,
     'excluido': excluido,
+    'imagem': imagem,
+    'destaque': destaque,
   };
 
   static Future<ProdutoModel> get(String documentPath, {full = false}) async {
@@ -50,5 +65,5 @@ class ProdutoModel extends AbstractModel {
   }
 
   @override
-  String toString() => 'produto/${docRef.id}';
+  String toString() => 'produto/${docRef!.id}';
 }

@@ -39,8 +39,14 @@ dependencies:
   cloud_firestore: ^6.1.0
   firebase_auth: ^6.1.2
   provider: ^6.1.5+1
-  intl: ^0.20.2 
+  intl: ^0.20.2
+  firebase_storage: ^13.0.5
+  amplify_flutter: ^2.0.0
+  amplify_auth_cognito: ^2.8.0
+  amplify_storage_s3: ^2.8.0
+  amplify_secure_storage: ^0.5.14
 
+  amplify_authenticator: ^2.0.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

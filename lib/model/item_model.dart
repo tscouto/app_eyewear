@@ -1,5 +1,6 @@
 import 'package:app_eyewear/model/abstract_model.dart';
 import 'package:app_eyewear/model/compra_model.dart';
+import 'package:app_eyewear/model/cor_model.dart';
 import 'package:app_eyewear/model/produto_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -15,7 +16,6 @@ class ItemModel extends AbstractModel {
 
   String? titulo;
   int? quantidade;
-  double? preco;
   double? valorUnitario;
   double? valorTotal;
   String? cor;
@@ -28,11 +28,10 @@ class ItemModel extends AbstractModel {
 
   ItemModel({
     this.titulo,
+    this.cor,
     this.quantidade,
-    this.preco,
     this.valorUnitario,
     this.valorTotal,
-    this.cor,
     this.fkCompra,
     this.fkProduto,
     this.excluido = false,
@@ -41,9 +40,7 @@ class ItemModel extends AbstractModel {
   ItemModel.fromJson(this.docRef, Map<String, dynamic> json)
     : titulo = json['titulo'],
       quantidade = json['quantidade'],
-      preco = json['preco'] != null
-          ? double.parse(json['preco'].toString())
-          : null,
+
       valorUnitario = json['valor_unitario'] != null
           ? double.parse(json['valor_unitario'].toString())
           : null,
@@ -62,12 +59,11 @@ class ItemModel extends AbstractModel {
   Map<String, dynamic> toJson({bool fullJson = false}) => {
     'titulo': titulo,
     'quantidade': quantidade,
-    'preco': preco,
     'valor_unitario': valorUnitario,
     'valor_total': valorTotal,
     'cor': cor,
-    'fk_compra': fullJson ? fkCompra?.toJson() : fkCompraRef,
-    'fk_produto': fullJson ? fkProduto?.toJson() : fkProdutoRef,
+    'fk_compra': fullJson ? fkCompra : referenceFromModel(fkCompra),
+    'fk_produto': fullJson ? fkProduto : referenceFromModel(fkProduto),
     'excluido': excluido,
   };
 
@@ -115,6 +111,4 @@ class ItemModel extends AbstractModel {
       snap.data() as Map<String, dynamic>,
     );
   }
-
- 
 }

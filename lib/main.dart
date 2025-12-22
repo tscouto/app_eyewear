@@ -1,3 +1,5 @@
+
+import 'package:amplify_storage_s3/amplify_storage_s3.dart';
 import 'package:app_eyewear/controller/user_controller.dart';
 import 'package:app_eyewear/view/carrinho/carrinho_page.dart';
 import 'package:app_eyewear/view/compras/compras_page.dart';
@@ -10,14 +12,17 @@ import 'package:app_eyewear/view/login/login_recuperar_page.dart';
 import 'package:app_eyewear/view/login/splash_page.dart';
 import 'package:app_eyewear/view/perfil/perfil_page.dart';
 import 'package:flutter/material.dart';
-// ignore: depend_on_referenced_packages
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
+import 'package:amplify_flutter/amplify_flutter.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // ⬇️ ADICIONE ESTA LINHA
+  final storage = AmplifyStorageS3();
+
+  await Amplify.addPlugins([storage]);
+
   await Firebase.initializeApp();
   runApp(const MyApp());
 }

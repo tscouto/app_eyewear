@@ -17,7 +17,7 @@ class Layout {
     int? bottomItemSelected,
   }) {
     var userController = Provider.of<UserController>(context);
- 
+    print(userController.user!.uid);
     return Scaffold(
       body: SafeArea(
         child: Stack(

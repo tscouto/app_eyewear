@@ -1,3 +1,4 @@
+import 'package:app_eyewear/controller/user_controller.dart';
 import 'package:app_eyewear/function.dart';
 import 'package:app_eyewear/model/compra_model.dart';
 import 'package:app_eyewear/view/compras/compra_detalhe_page.dart';
@@ -6,20 +7,24 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:app_eyewear/function.dart';
-
+import 'package:provider/provider.dart';
 
 class ComprasPage extends StatelessWidget {
   const ComprasPage({super.key});
 
   static String tag = '/compras-page';
 
-
-
-
   @override
   Widget build(BuildContext context) {
+    var userController = Provider.of<UserController>(context);
+    var queryCompras = FirebaseFirestore.instance
+        .collection('compra')
+        .where('uid', isEqualTo: userController.user?.uid)
+        .orderBy('data', descending: true)
+        .snapshots();
     var content = StreamBuilder(
-      stream: FirebaseFirestore.instance.collection('compra').snapshots(),
+      stream: queryCompras,
+
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasError) {
           return Center(child: Text('Erro: ${snapshot.error}'));
@@ -37,10 +42,11 @@ class ComprasPage extends StatelessWidget {
           shrinkWrap: true,
           itemCount: snapshot.data!.docs.length,
           itemBuilder: (BuildContext context, int i) {
-
             var docSnp = snapshot.data!.docs[i];
-            var item = CompraModel.fromJson(docSnp.reference, docSnp.data() as Map<String, dynamic>);
-
+            var item = CompraModel.fromJson(
+              docSnp.reference,
+              docSnp.data() as Map<String, dynamic>,
+            );
 
             return Container(
               margin: EdgeInsets.fromLTRB(20, (i == 0 ? 10 : 0), 20, 10),
@@ -50,13 +56,16 @@ class ComprasPage extends StatelessWidget {
               ),
               child: ListTile(
                 isThreeLine: true,
-                title: Text('#${item.sequence} - R\$ ${item.valorTotal?.toBRL()}'),
+                title: Text(
+                  '#${item.sequence} - R\$ ${item.valorTotal?.toBRL()}',
+                ),
                 subtitle: Text('${item.data?.toFormat()}  \n${item.status}'),
                 trailing: IconButton(
                   onPressed: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => CompraDetalhePage(docSnp.reference),
+                        builder: (context) =>
+                            CompraDetalhePage(docSnp.reference),
                       ),
                     );
                   },

@@ -12,19 +12,23 @@ class FavoritoModel extends AbstractModel {
   @override
   bool excluido = false;
 
-  String? uid;
-  ProdutoModel? fkProduto;
+  String uid;
+  DocumentReference fkProduto; // ✅ CORRETO
+
+  ProdutoModel? produto; // opcional (lazy load)
 
   FavoritoModel({
-    this.uid,
-    this.fkProduto,
+    required this.uid,
+    required this.fkProduto,
     this.excluido = false,
+    this.produto,
   });
 
-  FavoritoModel.fromJson(this.docRef, Map<String, dynamic> json)
-      : uid = json['uid'] as String?,
-        excluido = json['excluido'] ?? false,
-        fkProduto = null;
+  FavoritoModel.fromJson(DocumentReference ref, Map<String, dynamic> json)
+      : docRef = ref,
+        uid = json['uid'],
+        fkProduto = json['fk_produto'],
+        excluido = json['excluido'] ?? false;
 
   FavoritoModel.fromDocument(DocumentSnapshot doc)
       : this.fromJson(
@@ -35,41 +39,27 @@ class FavoritoModel extends AbstractModel {
   @override
   Map<String, dynamic> toJson({bool fullJson = false}) => {
         'uid': uid,
-        'fk_produto': fullJson
-            ? fkProduto?.toJson(fullJson: true)
-            : referenceFromModel(fkProduto),
+        'fk_produto': fkProduto, // 🔥 SEMPRE reference
         'excluido': excluido,
       };
 
-  static Future<FavoritoModel> get(
-    String documentPath, {
-    bool full = false,
-  }) async {
-    final snap =
-        await FirebaseFirestore.instance.doc(documentPath).get();
-
-    final data = snap.data() as Map<String, dynamic>;
-    final favorito = FavoritoModel.fromJson(snap.reference, data);
-
-    if (full && data['fk_produto'] is DocumentReference) {
-      await favorito.loadProduto(data['fk_produto'] as DocumentReference);
-    }
-
-    return favorito;
+  Future<void> insert() async {
+    await FirebaseFirestore.instance.collection(path).add(toJson());
   }
 
-  Future<ProdutoModel> loadProduto(DocumentReference ref) async {
-    final snap = await ref.get();
+  Future<void> update() async {
+    await docRef!.update(toJson());
+  }
 
-    if (!snap.exists) {
-      throw StateError('Produto não encontrado: ${ref.path}');
-    }
+  /// Lazy load opcional
+  Future<ProdutoModel> loadProduto() async {
+    final snap = await fkProduto.get();
 
-    fkProduto = ProdutoModel.fromJson(
-      ref,
+    produto = ProdutoModel.fromJson(
+      fkProduto,
       snap.data() as Map<String, dynamic>,
     );
 
-    return fkProduto!;
+    return produto!;
   }
 }

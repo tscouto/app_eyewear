@@ -1,7 +1,7 @@
 import 'package:app_eyewear/model/abstract_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class BannerMadel extends AbstractModel {
+class BannerModel extends AbstractModel {
   @override
   String get path => 'banner';
 
@@ -15,14 +15,14 @@ class BannerMadel extends AbstractModel {
   Timestamp? dataFinal;
   String? urlImagem;
 
-  BannerMadel({
+  BannerModel({
     this.dataInicial,
     this.dataFinal,
     this.urlImagem,
     this.excluido = false,
   });
 
-  BannerMadel.fromJson(this.docRef, Map<String, dynamic> json)
+  BannerModel.fromJson(this.docRef, Map<String, dynamic> json)
     : dataInicial = json['data_inicial'],
       dataFinal = json['data_final'],
       urlImagem = json['url_imagem'],
@@ -35,9 +35,9 @@ class BannerMadel extends AbstractModel {
     'url_imagem': urlImagem,
     'excluido': excluido,
   };
-  static Future<BannerMadel> get(String documentPath, {full = false}) async {
+  static Future<BannerModel> get(String documentPath, {full = false}) async {
     var item = await FirebaseFirestore.instance.doc(documentPath).get();
-    return BannerMadel.fromJson(
+    return BannerModel.fromJson(
       item.reference,
       item.data() as Map<String, dynamic>,
     );
