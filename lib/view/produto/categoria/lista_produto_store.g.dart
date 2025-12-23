@@ -111,6 +111,18 @@ mixin _$ListaProduto on _ListaProdutoBase, Store {
   }
 
   @override
+  dynamic toggleFavoritos() {
+    final _$actionInfo = _$_ListaProdutoBaseActionController.startAction(
+      name: '_ListaProdutoBase.toggleFavoritos',
+    );
+    try {
+      return super.toggleFavoritos();
+    } finally {
+      _$_ListaProdutoBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 loading: ${loading},

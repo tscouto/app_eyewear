@@ -1,16 +1,12 @@
 import 'package:app_eyewear/model/categoria_model.dart';
+import 'package:app_eyewear/model/favorito_model.dart';
 import 'package:app_eyewear/model/produto_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mobx/mobx.dart';
 
 part 'lista_produto_store.g.dart';
 
-enum ListaProdutoOrder {
-  maiorValor,
-  menorValor,
-  aParaZ,
-  zparaA
-}
+enum ListaProdutoOrder { maiorValor, menorValor, aParaZ, zparaA }
 
 class ListaProduto extends _ListaProdutoBase with _$ListaProduto {
   ListaProduto(CategoriaModel categoriaModel, String uid)
@@ -26,6 +22,8 @@ abstract class _ListaProdutoBase with Store {
 
   String _termoPesquisa = '';
 
+  List<FavoritoModel>? _listaFavoritos;
+
   List<ProdutoModel>? _listaProdutos;
   @observable
   bool loading = true;
@@ -33,8 +31,8 @@ abstract class _ListaProdutoBase with Store {
   @observable
   List<ProdutoModel> lista = [];
 
-   @observable
-   ListaProdutoOrder ordernacao = ListaProdutoOrder.aParaZ;
+  @observable
+  ListaProdutoOrder ordernacao = ListaProdutoOrder.aParaZ;
 
   @action
   void pesquisa(String value) {
@@ -48,13 +46,22 @@ abstract class _ListaProdutoBase with Store {
     _filtraLista();
   }
 
+  @action
+  toggleFavoritos() {
+    favoritos = !favoritos;
+    _filtraLista();
+  }
+
   @observable
-  bool favoritos = true;
+  bool favoritos = false;
 
   void _filtraLista() async {
     loading = true;
 
-    
+    if (_listaFavoritos == null) {
+      await _carregaListaFavoritos();
+    }
+
     if (_listaProdutos == null) {
       await _carregaListaProdutos();
     }
@@ -62,6 +69,20 @@ abstract class _ListaProdutoBase with Store {
     final List<ProdutoModel> filtrados = [];
 
     for (var item in _listaProdutos!) {
+
+          if(favoritos) {
+            var exists = false;
+           for(var favorito in _listaFavoritos!) {
+            if(favorito.excluido == false && favorito.fkProduto.path == item.docRef!.path ) {
+              exists = true;
+              break;
+            }
+           }
+           if(!exists) {
+            continue;
+           }
+          }
+
       if (_termoPesquisa.isNotEmpty) {
         final titulo = (item.titulo ?? '').toLowerCase();
         final detalhe = (item.detalhe ?? '').toLowerCase();
@@ -80,9 +101,9 @@ abstract class _ListaProdutoBase with Store {
     lista = filtrados;
     loading = false;
 
-    if(lista.isNotEmpty) {
+    if (lista.isNotEmpty) {
       lista.sort((a, b) {
-        var  result = 0;
+        var result = 0;
         switch (ordernacao) {
           case ListaProdutoOrder.aParaZ:
             result = a.titulo!.compareTo(b.titulo!);
@@ -96,7 +117,8 @@ abstract class _ListaProdutoBase with Store {
           case ListaProdutoOrder.menorValor:
             result = a.preco!.compareTo(b.preco!);
             break;
-          default: throw Exception('Ordernacao invalida');
+          default:
+            throw Exception('Ordernacao invalida');
         }
         return result;
       });
@@ -105,6 +127,8 @@ abstract class _ListaProdutoBase with Store {
 
   Future<void> _carregaListaProdutos() async {
     _listaProdutos = [];
+
+
     var produtosDocs = await FirebaseFirestore.instance
         .collection('produto')
         .where('fk_categoria', isEqualTo: categoriaModel.docRef)
@@ -114,6 +138,23 @@ abstract class _ListaProdutoBase with Store {
     for (var prodDoc in produtosDocs.docs) {
       var item = ProdutoModel.fromDocument(prodDoc);
       _listaProdutos!.add(item);
+    }
+  }
+
+  Future<void> _carregaListaFavoritos() async {
+    _listaFavoritos = [];
+
+    var favoritosDocs = await FirebaseFirestore.instance
+        .collection('favorito')
+        .where('uid', isEqualTo: uid)
+        .get();
+
+    for (var favDoc in favoritosDocs.docs) {
+      var favorito = FavoritoModel.fromDocument(favDoc);
+
+      await favorito.loadProduto();
+
+      _listaFavoritos!.add(favorito);
     }
   }
 }

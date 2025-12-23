@@ -96,7 +96,9 @@ class _CategoriaPageState extends State<CategoriaPage> {
                           nomeOrderItem,
                           style: TextStyle(color: Layout.light()),
                         ),
-                        backgroundColor: Layout.dark((listaProduto.ordernacao == proOrderValue) ? 0.6 : 1),
+                        backgroundColor: Layout.dark(
+                          (listaProduto.ordernacao == proOrderValue) ? 0.6 : 1,
+                        ),
                       ),
                       onTap: () {
                         listaProduto.reordenar(proOrderValue);
@@ -110,11 +112,37 @@ class _CategoriaPageState extends State<CategoriaPage> {
         ),
         Padding(
           padding: const EdgeInsets.only(left: 20, top: 10, bottom: 10),
-          child: Text(
-            'Categoria: ${widget.categoria.nome}',
-            style: Theme.of(
-              context,
-            ).textTheme.titleLarge?.copyWith(color: Layout.light()),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Categoria: ${widget.categoria.nome}',
+                style: Theme.of(
+                  context,
+                ).textTheme.titleLarge?.copyWith(color: Layout.light()),
+              ),
+              Observer(
+                builder: (context) {
+                  return TextButton(
+                    style: TextButton.styleFrom(
+                      backgroundColor: Colors.red[300],
+                      shape: const CircleBorder(),
+                      padding: const EdgeInsets.all(10),
+                    ),
+                    child: FaIcon(
+                      listaProduto.favoritos
+                          ? FontAwesomeIcons.solidHeart
+                          : FontAwesomeIcons.heart,
+                      color: Layout.light(),
+                      size: 16,
+                    ),
+                    onPressed: () {
+                      listaProduto.toggleFavoritos();
+                    },
+                  );
+                },
+              ),
+            ],
           ),
         ),
         Expanded(
@@ -200,7 +228,7 @@ class _CategoriaPageState extends State<CategoriaPage> {
                       ),
                     ),
                     onTap: () {
-                      Navigator.of(context).push(
+                      Navigator.of(context).pushReplacement(
                         MaterialPageRoute(
                           builder: (context) => ProdutoPage(produto.docRef!),
                         ),
