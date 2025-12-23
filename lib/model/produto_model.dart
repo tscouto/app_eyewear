@@ -35,14 +35,17 @@ class ProdutoModel extends AbstractModel {
   });
 
   ProdutoModel.fromJson(this.docRef, Map<String, dynamic> json)
-    : titulo = json['titulo'],
-      chamada = json['chamada'],
-      detalhe = json['detalhe'],
+    : titulo = json['titulo'].toString(),
+      chamada = json['chamada'].toString(),
+      detalhe = json['detalhe'].toString(),
       preco = (json['preco'] as num?)?.toDouble(),
-      imagem = json['imagem'],
+      imagem = json['imagem'].toString(),
       destaque = json['destaque'],
       fkCategoriaRef = json['fk_categoria'],
       excluido = json['excluido'] ?? false;
+
+  ProdutoModel.fromDocument(DocumentSnapshot doc)
+    : this.fromJson(doc.reference, doc.data() as Map<String, dynamic>);
 
   @override
   Map<String, dynamic> toJson({bool fullJson = false}) => {
@@ -50,7 +53,7 @@ class ProdutoModel extends AbstractModel {
     'chamada': chamada,
     'detalhe': detalhe,
     'preco': preco,
-    'fk_categoria': fullJson? fkCategoria?.docRef : fkCategoriaRef,
+    'fk_categoria': fullJson ? fkCategoria?.docRef : fkCategoriaRef,
     'excluido': excluido,
     'imagem': imagem,
     'destaque': destaque,
@@ -62,6 +65,14 @@ class ProdutoModel extends AbstractModel {
       item.reference,
       item.data() as Map<String, dynamic>,
     );
+  }
+
+  Future<CategoriaModel> loadCategoria(DocumentReference itemRef) async {
+    var categoria = await itemRef.get();
+    fkCategoria = categoria.exists
+        ? CategoriaModel.fromJson(itemRef, categoria.data() as Map<String, dynamic>)
+        : null;
+    return fkCategoria!;
   }
 
   @override

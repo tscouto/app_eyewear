@@ -102,13 +102,14 @@ class HomeDestaques extends StatelessWidget {
           itemCount: snapshot.data!.length,
           itemBuilder: (context, i) {
             final item = snapshot.data![i];
+            
 
             return GestureDetector(
               onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => ProdutoPage(item.docRef!.id),
+                    builder: (context) => ProdutoPage(item.docRef!),
                   ),
                 );
               },

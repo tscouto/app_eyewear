@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:app_eyewear/model/categoria_model.dart';
 import 'package:app_eyewear/view/layout.dart';
-import 'package:app_eyewear/view/produto/categoria_page.dart';
+import 'package:app_eyewear/view/produto/categoria/categoria_page.dart';
 import 'package:flutter/material.dart';
 
 enum SweypDirection { left, right }

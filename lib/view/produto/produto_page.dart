@@ -1,11 +1,19 @@
+import 'package:app_eyewear/controller/user_controller.dart';
+import 'package:app_eyewear/function.dart';
+import 'package:app_eyewear/model/produto_model.dart';
+import 'package:app_eyewear/view/carrinho/carrinho_page.dart';
 import 'package:app_eyewear/view/layout.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 
 class ProdutoPage extends StatefulWidget {
-  const ProdutoPage(this.id, {super.key});
+  ProdutoPage(this.produtoRef, {super.key});
   static String tag = '/produto-page';
-  final String id;
+
+  final DocumentReference produtoRef;
 
   @override
   State<ProdutoPage> createState() => _ProdutoPageState();
@@ -14,186 +22,262 @@ class ProdutoPage extends StatefulWidget {
 class _ProdutoPageState extends State<ProdutoPage> {
   int currentPic = 0;
 
+  int corSelecionada = 0;
+
+  List<String> imagens = [];
+
+  List<String> cores = [];
+
   @override
   Widget build(BuildContext context) {
-    int currentPic = 0;
     var sController = ScrollController();
     var listViewItemWidth = MediaQuery.of(context).size.width - 40;
 
-    var content = Container(
-      margin: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(25)),
-      child: Column(
-        children: [
-          SizedBox(
-            height: MediaQuery.of(context).size.width / 2,
-            child: Stack(
-              children: [
-                ListView.builder(
-                  controller: sController,
-                  scrollDirection: Axis.horizontal,
-                  physics: PageScrollPhysics(),
-                  itemCount: 3,
-                  itemBuilder: (BuildContext context, int i) {
-                    return SizedBox(
+    var userController = Provider.of<UserController>(context);
+
+    var content = FutureBuilder(
+      future: buscaDetalhesProduto(),
+      builder: (context, AsyncSnapshot<ProdutoModel> snapshot) {
+        if (snapshot.data == null) {
+          return Center(child: CircularProgressIndicator());
+        }
+
+        var item = snapshot.data;
+        return Container(
+          margin: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(25)),
+          child: Column(
+            children: [
+              SizedBox(
+                height: MediaQuery.of(context).size.width / 2,
+                child: Stack(
+                  children: [
+                    ListView.builder(
+                      controller: sController,
+                      scrollDirection: Axis.horizontal,
+                      physics: PageScrollPhysics(),
+                      itemCount: imagens.length,
+                      itemBuilder: (BuildContext context, int i) {
+                        return SizedBox(
+                          width: listViewItemWidth,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(25),
+                              topRight: Radius.circular(25),
+                            ),
+                            // child: Image.network(imagens[i], fit: BoxFit.cover),
+                            child: Image.asset(
+                              'assets/images/produtos/prod-${i + 1}.jpg',
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                    Container(
                       width: listViewItemWidth,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(25),
-                          topRight: Radius.circular(25),
-                        ),
-                        child: Image.asset(
-                          'assets/images/produtos/prod-${i + 1}.jpg',
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    );
-                  },
-                ),
-                Container(
-                  width: listViewItemWidth,
-                  padding: const EdgeInsets.only(top: 10),
-                  child: Align(
-                    alignment: Alignment.topRight,
-                    child: ElevatedButton(
-                      onPressed: () {},
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red[300],
-                        shape: const CircleBorder(),
-                        padding: const EdgeInsets.all(10),
-                      ),
-                      child: FaIcon(
-                        FontAwesomeIcons.solidHeart,
-                        color: Layout.light(),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  width: listViewItemWidth,
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: IconButton(
-                      onPressed: () {
-                        sController.animateTo(
-                          (currentPic - 1) * listViewItemWidth,
-                          duration: Duration(microseconds: 700),
-                          curve: Curves.ease,
-                        );
-                        currentPic--;
-                      },
-                      icon: FaIcon(
-                        FontAwesomeIcons.chevronLeft,
-                        color: Layout.light(),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  width: listViewItemWidth,
-                  child: Align(
-                    alignment: Alignment.centerRight,
-                    child: IconButton(
-                      onPressed: () {
-                        sController.animateTo(
-                          (currentPic + 1) * listViewItemWidth,
-                          duration: Duration(microseconds: 700),
-                          curve: Curves.ease,
-                        );
-                        currentPic++;
-                      },
-                      icon: FaIcon(
-                        FontAwesomeIcons.chevronRight,
-                        color: Layout.light(),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Expanded(
-            child: Container(
-              color: Layout.light(),
-              height: 100,
-              width: double.infinity,
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SizedBox(
-                        width: (MediaQuery.of(context).size.width - 60) * .65,
-                        child: Text(
-                          'R\$ 150,00',
-                          textAlign: TextAlign.start,
-                          style: Theme.of(context).textTheme.headlineMedium
-                              ?.copyWith(color: Layout.primaryDark()),
+                      padding: const EdgeInsets.only(top: 10),
+                      child: Align(
+                        alignment: Alignment.topRight,
+                        child: ElevatedButton(
+                          onPressed: () {},
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red[300],
+                            shape: const CircleBorder(),
+                            padding: const EdgeInsets.all(10),
+                          ),
+                          child: FaIcon(
+                            FontAwesomeIcons.solidHeart,
+                            color: Layout.light(),
+                          ),
                         ),
                       ),
-                    ],
-                  ),
-                  SizedBox(height: 10),
-                  Row(
+                    ),
+                    SizedBox(
+                      width: listViewItemWidth,
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: IconButton(
+                          onPressed: () {
+                            sController.animateTo(
+                              (currentPic - 1) * listViewItemWidth,
+                              duration: Duration(microseconds: 700),
+                              curve: Curves.ease,
+                            );
+                            currentPic--;
+                            if (currentPic < 0) {
+                              currentPic = 0;
+                            }
+                          },
+                          icon: FaIcon(
+                            FontAwesomeIcons.chevronLeft,
+                            color: Layout.light(),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: listViewItemWidth,
+                      child: Align(
+                        alignment: Alignment.centerRight,
+                        child: IconButton(
+                          onPressed: () {
+                            sController.animateTo(
+                              (currentPic + 1) * listViewItemWidth,
+                              duration: Duration(microseconds: 700),
+                              curve: Curves.ease,
+                            );
+                            currentPic++;
+                            if (currentPic > imagens.length - 1) {
+                              currentPic = imagens.length - 1;
+                            }
+                          },
+                          icon: FaIcon(
+                            FontAwesomeIcons.chevronRight,
+                            color: Layout.light(),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Container(
+                  color: Layout.light(),
+                  height: 100,
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.only(right: 5),
-                        child: Chip(label: Text('Vermelho')),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            width:
+                                (MediaQuery.of(context).size.width - 70) * .60,
+                            child: Text(
+                              item!.titulo!,
+                              textAlign: TextAlign.start,
+                              style: Theme.of(context).textTheme.titleLarge
+                                  ?.copyWith(color: Layout.primaryDark()),
+                            ),
+                          ),
+                          Expanded(
+                            child: Text(
+                              item.preco!.toBRL(),
+                              textAlign: TextAlign.end,
+                              style: Theme.of(context).textTheme.titleLarge
+                                  ?.copyWith(color: Layout.primary()),
+                            ),
+                          ),
+                        ],
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 5),
-                        child: Chip(label: Text('Preto')),
+                      SizedBox(height: 10),
+                      Row(
+                        children: List<Widget>.generate(cores.length, (iCor) {
+                          return Padding(
+                            padding: const EdgeInsets.only(right: 5),
+                            child: GestureDetector(
+                              child: Chip(
+                                label: Text(
+                                  cores[iCor],
+                                  style: TextStyle(
+                                    color: (corSelecionada == iCor
+                                        ? Colors.white
+                                        : Colors.black),
+                                  ),
+                                ),
+                                backgroundColor: (corSelecionada == iCor)
+                                    ? Layout.primaryDark(.6)
+                                    : Colors.grey[300],
+                              ),
+                              onTap: () {
+                                setState(() {
+                                  corSelecionada = iCor;
+                                });
+                              },
+                            ),
+                          );
+                        }),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 5),
-                        child: Chip(label: Text('Azul')),
+                      SizedBox(height: 20),
+                      Expanded(
+                        child: ListView(
+                          children: <Widget>[
+                            Text(
+                              'Detalhes',
+                              style: Theme.of(context).textTheme.headlineMedium
+                                  ?.copyWith(color: Layout.primaryDark()),
+                            ),
+                            SizedBox(height: 10),
+                            Text(item.detalhe!),
+                          ],
+                        ),
                       ),
                     ],
                   ),
-                  SizedBox(height: 20),
-                  Expanded(
-                    child: ListView(
-                      children: <Widget>[
-                        Text(
-                          'Detalhes',
-                          style: Theme.of(context).textTheme.headlineMedium
-                              ?.copyWith(color: Layout.primaryDark()),
-                        ),
-                        SizedBox(height: 10),
-                        Text(
-                          'A populacao ela precisa da Zona Fraca de Mnaua, porque na Zona Franca de Manaus, nao e uma zona de exportacao, e uma zona para o Brasil. Portanto ela tem um objetivo, ela evita a desmatamamento que e altamente lucrativo, Deeeubar arvores da natureza e uma lucrativo',
-                        ),
-                      ],
+                ),
+              ),
+              GestureDetector(
+                child: Container(
+                  height: 60,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Layout.primary(),
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(25),
+                      bottomRight: Radius.circular(25),
                     ),
                   ),
-                ],
+                  child: Center(
+                    child: Text(
+                      'Comprar',
+                      style: Theme.of(
+                        context,
+                      ).textTheme.headlineLarge?.copyWith(color: Colors.white),
+                    ),
+                  ),
+                ),
+                onTap: () {
+                  Navigator.of(context).pushNamed(CarrinhoPage.tag);
+                },
               ),
-            ),
+            ],
           ),
-          Container(
-            height: 60,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: Layout.primary(),
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(25),
-                bottomRight: Radius.circular(25),
-              ),
-            ),
-            child: Center(
-              child: Text(
-                'Comprar',
-                style: Theme.of(
-                  context,
-                ).textTheme.headlineLarge?.copyWith(color: Colors.white),
-              ),
-            ),
-          ),
-        ],
-      ),
+        );
+      },
     );
     return Layout.render(context, content);
+  }
+
+  Future<ProdutoModel> buscaDetalhesProduto() async {
+    var docSnp = await widget.produtoRef.get();
+    var result = ProdutoModel.fromDocument(docSnp);
+    imagens = [];
+    imagens.add(result.imagem!);
+
+    var fotos = await FirebaseFirestore.instance
+        .collection('foto')
+        .where('fk_produto', isEqualTo: widget.produtoRef)
+        .where('excluido', isEqualTo: false)
+        .get();
+    
+    for (var foto in fotos.docs) {
+      imagens.add(foto.get('url'));
+    }
+
+    cores = [];
+    var coresDoc = await FirebaseFirestore.instance
+        .collection('cor')
+        .where('fk_produto', isEqualTo: widget.produtoRef)
+        .where('excluido', isEqualTo: false)
+        .get();
+
+    for (var cor in coresDoc.docs) {
+      cores.add(cor.get('texto'));
+    }
+    return result;
   }
 }
