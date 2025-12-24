@@ -1,4 +1,4 @@
-import 'package:app_eyewear/controller/user_controller.dart';
+import 'package:app_eyewear/controller/users/user_controller.dart';
 import 'package:app_eyewear/function.dart';
 import 'package:app_eyewear/model/compra_model.dart';
 import 'package:app_eyewear/view/compras/compra_detalhe_page.dart';

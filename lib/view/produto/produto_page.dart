@@ -1,4 +1,6 @@
-import 'package:app_eyewear/controller/user_controller.dart';
+import 'dart:developer';
+
+import 'package:app_eyewear/controller/users/user_controller.dart';
 import 'package:app_eyewear/function.dart';
 import 'package:app_eyewear/model/produto_model.dart';
 import 'package:app_eyewear/view/carrinho/carrinho_page.dart';
@@ -21,12 +23,11 @@ class ProdutoPage extends StatefulWidget {
 
 class _ProdutoPageState extends State<ProdutoPage> {
   int currentPic = 0;
-
   int corSelecionada = 0;
-
   List<String> imagens = [];
-
   List<String> cores = [];
+
+  ProdutoModel? produto;
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +43,8 @@ class _ProdutoPageState extends State<ProdutoPage> {
           return Center(child: CircularProgressIndicator());
         }
 
-        var item = snapshot.data;
+        produto = snapshot.data;
+      
         return Container(
           margin: const EdgeInsets.fromLTRB(20, 0, 20, 20),
           decoration: BoxDecoration(borderRadius: BorderRadius.circular(25)),
@@ -158,7 +160,7 @@ class _ProdutoPageState extends State<ProdutoPage> {
                             width:
                                 (MediaQuery.of(context).size.width - 70) * .60,
                             child: Text(
-                              item!.titulo!,
+                              produto!.titulo!,
                               textAlign: TextAlign.start,
                               style: Theme.of(context).textTheme.titleLarge
                                   ?.copyWith(color: Layout.primaryDark()),
@@ -166,7 +168,7 @@ class _ProdutoPageState extends State<ProdutoPage> {
                           ),
                           Expanded(
                             child: Text(
-                              item.preco!.toBRL(),
+                              produto!.preco!.toBRL(),
                               textAlign: TextAlign.end,
                               style: Theme.of(context).textTheme.titleLarge
                                   ?.copyWith(color: Layout.primary()),
@@ -212,7 +214,7 @@ class _ProdutoPageState extends State<ProdutoPage> {
                                   ?.copyWith(color: Layout.primaryDark()),
                             ),
                             SizedBox(height: 10),
-                            Text(item.detalhe!),
+                            Text(produto!.detalhe!),
                           ],
                         ),
                       ),
@@ -253,7 +255,14 @@ class _ProdutoPageState extends State<ProdutoPage> {
   }
 
   Future<ProdutoModel> buscaDetalhesProduto() async {
+      // Isso impede de fazer consultas repetidas ao usar
+      // o setState para marcar a cor selecionada
+    if(produto != null) {
+      return produto!;
+    }
     var docSnp = await widget.produtoRef.get();
+
+   
     var result = ProdutoModel.fromDocument(docSnp);
     imagens = [];
     imagens.add(result.imagem!);

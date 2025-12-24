@@ -1,6 +1,6 @@
 
 import 'package:amplify_storage_s3/amplify_storage_s3.dart';
-import 'package:app_eyewear/controller/user_controller.dart';
+import 'package:app_eyewear/controller/users/user_controller.dart';
 import 'package:app_eyewear/view/carrinho/carrinho_page.dart';
 import 'package:app_eyewear/view/compras/compras_page.dart';
 import 'package:app_eyewear/view/favoritos/favoritos_page.dart';
@@ -34,8 +34,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
+    
       providers: [Provider<UserController>(create: (_) => UserController())],
       child: MaterialApp(
+        //debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         theme: ThemeData(
           fontFamily: 'JosefinSans',

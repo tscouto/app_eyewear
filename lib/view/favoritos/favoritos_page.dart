@@ -1,4 +1,4 @@
-import 'package:app_eyewear/controller/user_controller.dart';
+import 'package:app_eyewear/controller/users/user_controller.dart';
 import 'package:app_eyewear/model/favorito_model.dart';
 import 'package:app_eyewear/model/produto_model.dart';
 import 'package:app_eyewear/view/layout.dart';

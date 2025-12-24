@@ -1,4 +1,4 @@
-import 'package:app_eyewear/controller/user_controller.dart';
+import 'package:app_eyewear/controller/users/user_controller.dart';
 import 'package:app_eyewear/model/endereco_model.dart';
 import 'package:app_eyewear/view/home/home_page.dart';
 import 'package:app_eyewear/view/layout.dart';

@@ -1,4 +1,4 @@
-import 'package:app_eyewear/controller/user_controller.dart';
+import 'package:app_eyewear/controller/users/user_controller.dart';
 import 'package:app_eyewear/view/carrinho/carrinho_page.dart';
 import 'package:app_eyewear/view/compras/compras_page.dart';
 import 'package:app_eyewear/view/favoritos/favoritos_page.dart';
@@ -18,7 +18,7 @@ class Layout {
     int? bottomItemSelected,
   }) {
     var userController = Provider.of<UserController>(context);
-    
+
     print(userController.user!.uid);
     return Scaffold(
       body: SafeArea(
@@ -74,6 +74,30 @@ class Layout {
                                 FontAwesomeIcons.bagShopping,
                                 color: Layout.primaryLight(),
                                 size: 24,
+                              ),
+                              ConstrainedBox(
+                                constraints: const BoxConstraints(minWidth: 30),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Layout.light(),
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  margin: const EdgeInsets.only(left: 5),
+                                  padding: const EdgeInsets.all(5),
+                                  child: Align(
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      '5',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .labelMedium
+                                          ?.copyWith(
+                                            color: Layout.primaryLight(),
+                                          ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ),
                               ),
                             ],
                           ),
