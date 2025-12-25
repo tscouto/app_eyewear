@@ -49,21 +49,24 @@ abstract class _CarrinhoStore with Store {
       items.add(item);
     }
 
+    frete = null;
   }
 
-    CarrinhoItemStore? _getItem(CarrinhoItemStore item) {
-      for (var i in items) {
-        if (i.produto!.docRef!.id == item.produto!.docRef!.id &&
-            i.cor == item.cor) {
-          return i;
-        }
+  CarrinhoItemStore? _getItem(CarrinhoItemStore item) {
+    for (var i in items) {
+      if (i.produto!.docRef!.id == item.produto!.docRef!.id &&
+          i.cor == item.cor) {
+        return i;
       }
-      return null;
     }
-
-    @action
-    removeItem(CarrinhoItemStore item) {
-      items.remove(item);
-    }
+    return null;
   }
 
+  @action
+  removeItem(CarrinhoItemStore item) {
+    items.remove(item);
+
+    // cliente deve selecionar novamente
+    frete = null;
+  }
+}

@@ -1,12 +1,11 @@
-import 'dart:developer';
 
-import 'package:app_eyewear/controller/users/user_controller.dart';
-import 'package:app_eyewear/function.dart';
+import 'package:app_eyewear/controller/carrinho/carrinho_item_store.dart';
+import 'package:app_eyewear/controller/carrinho/carrinho_store.dart';
+import 'package:app_eyewear/function/sums_dates/function.dart';
 import 'package:app_eyewear/model/produto_model.dart';
 import 'package:app_eyewear/view/carrinho/carrinho_page.dart';
 import 'package:app_eyewear/view/layout.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -33,8 +32,7 @@ class _ProdutoPageState extends State<ProdutoPage> {
   Widget build(BuildContext context) {
     var sController = ScrollController();
     var listViewItemWidth = MediaQuery.of(context).size.width - 40;
-
-    var userController = Provider.of<UserController>(context);
+    var carrinho = Provider.of<CarrinhoStore>(context);
 
     var content = FutureBuilder(
       future: buscaDetalhesProduto(),
@@ -44,7 +42,7 @@ class _ProdutoPageState extends State<ProdutoPage> {
         }
 
         produto = snapshot.data;
-      
+
         return Container(
           margin: const EdgeInsets.fromLTRB(20, 0, 20, 20),
           decoration: BoxDecoration(borderRadius: BorderRadius.circular(25)),
@@ -243,6 +241,12 @@ class _ProdutoPageState extends State<ProdutoPage> {
                   ),
                 ),
                 onTap: () {
+                  carrinho.addItem(
+                    CarrinhoItemStore(
+                      produto:produto!,
+                      cor:cores.isNotEmpty ? cores[corSelecionada] : 'Cor única',
+                    ),
+                  );
                   Navigator.of(context).pushNamed(CarrinhoPage.tag);
                 },
               ),
@@ -255,14 +259,13 @@ class _ProdutoPageState extends State<ProdutoPage> {
   }
 
   Future<ProdutoModel> buscaDetalhesProduto() async {
-      // Isso impede de fazer consultas repetidas ao usar
-      // o setState para marcar a cor selecionada
-    if(produto != null) {
+    // Isso impede de fazer consultas repetidas ao usar
+    // o setState para marcar a cor selecionada
+    if (produto != null) {
       return produto!;
     }
     var docSnp = await widget.produtoRef.get();
 
-   
     var result = ProdutoModel.fromDocument(docSnp);
     imagens = [];
     imagens.add(result.imagem!);
@@ -272,7 +275,7 @@ class _ProdutoPageState extends State<ProdutoPage> {
         .where('fk_produto', isEqualTo: widget.produtoRef)
         .where('excluido', isEqualTo: false)
         .get();
-    
+
     for (var foto in fotos.docs) {
       imagens.add(foto.get('url'));
     }

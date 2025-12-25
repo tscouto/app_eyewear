@@ -3,16 +3,13 @@ import 'package:mobx/mobx.dart';
 
 part 'carrinho_item_store.g.dart';
 
-class CarrinhoItemStore extends _CarrinhoItemStore with _$CarrinhoItemStore {
-  CarrinhoItemStore(ProdutoModel produto, String? cor, [int quantidade = 1])
-    : super(produto: produto, cor: cor, quantidade: quantidade);
-}
+class CarrinhoItemStore = _CarrinhoItemStore with _$CarrinhoItemStore;
 
 abstract class _CarrinhoItemStore with Store {
-  _CarrinhoItemStore({this.produto, this.cor, this.quantidade = 1});
+  _CarrinhoItemStore({required this.produto, this.cor, this.quantidade = 1});
 
   @observable
-  ProdutoModel? produto;
+  ProdutoModel produto;
 
   @observable
   int quantidade;
@@ -21,7 +18,7 @@ abstract class _CarrinhoItemStore with Store {
   String? cor;
 
   @computed
-  double get valorItem => produto!.preco! * quantidade;
+  double get valorItem => produto.preco! * quantidade;
 
   @action
   increment() {

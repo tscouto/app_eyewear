@@ -1,12 +1,11 @@
 import 'package:app_eyewear/controller/users/user_controller.dart';
-import 'package:app_eyewear/function.dart';
+import 'package:app_eyewear/function/sums_dates/function.dart';
 import 'package:app_eyewear/model/compra_model.dart';
 import 'package:app_eyewear/view/compras/compra_detalhe_page.dart';
 import 'package:app_eyewear/view/layout.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:app_eyewear/function.dart';
 import 'package:provider/provider.dart';
 
 class ComprasPage extends StatelessWidget {

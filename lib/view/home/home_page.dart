@@ -4,7 +4,6 @@ import 'package:app_eyewear/view/home/promo_banner.dart';
 import 'package:app_eyewear/view/home/roda_categoria.dart';
 import 'package:app_eyewear/view/layout.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {

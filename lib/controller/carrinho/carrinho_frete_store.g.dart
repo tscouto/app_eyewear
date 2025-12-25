@@ -45,11 +45,30 @@ mixin _$CarrinhoFreteStore on _CarrinhoFreteStore, Store {
     });
   }
 
+  late final _$prazoAtom = Atom(
+    name: '_CarrinhoFreteStore.prazo',
+    context: context,
+  );
+
+  @override
+  int get prazo {
+    _$prazoAtom.reportRead();
+    return super.prazo;
+  }
+
+  @override
+  set prazo(int value) {
+    _$prazoAtom.reportWrite(value, super.prazo, () {
+      super.prazo = value;
+    });
+  }
+
   @override
   String toString() {
     return '''
 nome: ${nome},
-valor: ${valor}
+valor: ${valor},
+prazo: ${prazo}
     ''';
   }
 }

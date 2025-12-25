@@ -1,3 +1,4 @@
+import 'package:app_eyewear/controller/carrinho/carrinho_store.dart';
 import 'package:app_eyewear/controller/users/user_controller.dart';
 import 'package:app_eyewear/view/carrinho/carrinho_page.dart';
 import 'package:app_eyewear/view/compras/compras_page.dart';
@@ -6,6 +7,7 @@ import 'package:app_eyewear/view/home/home_page.dart';
 import 'package:app_eyewear/view/login/login_page.dart';
 import 'package:app_eyewear/view/perfil/perfil_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -18,8 +20,9 @@ class Layout {
     int? bottomItemSelected,
   }) {
     var userController = Provider.of<UserController>(context);
+    var carrinho = Provider.of<CarrinhoStore>(context);
 
-    print(userController.user!.uid);
+
     return Scaffold(
       body: SafeArea(
         child: Stack(
@@ -75,7 +78,7 @@ class Layout {
                                 color: Layout.primaryLight(),
                                 size: 24,
                               ),
-                              ConstrainedBox(
+                             (carrinho.items.isNotEmpty) ?  ConstrainedBox(
                                 constraints: const BoxConstraints(minWidth: 30),
                                 child: Container(
                                   decoration: BoxDecoration(
@@ -86,19 +89,24 @@ class Layout {
                                   padding: const EdgeInsets.all(5),
                                   child: Align(
                                     alignment: Alignment.center,
-                                    child: Text(
-                                      '5',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .labelMedium
-                                          ?.copyWith(
-                                            color: Layout.primaryLight(),
-                                          ),
-                                      textAlign: TextAlign.center,
+                                    child: Observer(
+                                      builder: (context) {
+                                        return Text(
+                                          carrinho.items.length.toString(),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .labelMedium
+                                              ?.copyWith(
+                                                color: Layout.primaryLight(),
+                                              ),
+                                          textAlign: TextAlign.center,
+                                        );
+                                      },
                                     ),
                                   ),
                                 ),
-                              ),
+                              ):
+                              SizedBox()
                             ],
                           ),
                         ),

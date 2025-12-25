@@ -23,13 +23,13 @@ mixin _$CarrinhoItemStore on _CarrinhoItemStore, Store {
   );
 
   @override
-  ProdutoModel? get produto {
+  ProdutoModel get produto {
     _$produtoAtom.reportRead();
     return super.produto;
   }
 
   @override
-  set produto(ProdutoModel? value) {
+  set produto(ProdutoModel value) {
     _$produtoAtom.reportWrite(value, super.produto, () {
       super.produto = value;
     });

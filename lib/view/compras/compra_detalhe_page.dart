@@ -1,5 +1,5 @@
 import 'package:app_eyewear/controller/compra/compra_detalhe_controller.dart';
-import 'package:app_eyewear/function.dart';
+import 'package:app_eyewear/function/sums_dates/function.dart';
 import 'package:app_eyewear/view/layout.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';

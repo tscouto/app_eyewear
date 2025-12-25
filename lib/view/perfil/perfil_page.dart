@@ -6,12 +6,20 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:get/instance_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 
+UserController? _userController;
+
 class PerfilPage extends StatefulWidget {
-  final EnderecoModel? enderecoModel;
-  PerfilPage({this.enderecoModel, super.key});
+  final EnderecoModel? _enderecoModel;
+  final String? snackbarMessage;
+
+  PerfilPage({this.snackbarMessage, EnderecoModel? enderecoModel, super.key})
+    : _enderecoModel = enderecoModel; // atr
 
   static String tag = 'perfil-page';
 
@@ -36,13 +44,24 @@ class _PerfilPageState extends State<PerfilPage> {
   final _cidade = TextEditingController();
 
   final _estado = TextEditingController();
-  EnderecoModel? enderecoModel;
-  UserController? userController;
+  EnderecoModel? _enderecoModel;
+  // UserController? userController;
 
   @override
   void initState() {
     super.initState();
-    enderecoModel = widget.enderecoModel;
+    if (widget.snackbarMessage != null) {
+      SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+        Get.snackbar(
+          'Aviso',
+          duration: const Duration(seconds: 5),
+          widget.snackbarMessage!,
+          backgroundColor: Layout.secondaryHighLight(),
+          margin: const EdgeInsets.all(20),
+        );
+      });
+    }
+    _enderecoModel = widget._enderecoModel;
   }
 
   @override
@@ -59,15 +78,10 @@ class _PerfilPageState extends State<PerfilPage> {
 
   @override
   Widget build(BuildContext topContext) {
-    userController = Provider.of<UserController>(topContext);
+    _userController = Provider.of<UserController>(topContext);
     var container = FutureBuilder(
-      future: FirebaseFirestore.instance
-          .collection('endereco')
-          .where('uid', isEqualTo: userController!.user!.uid)
-          .get(),
+      future: loadEndereco(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-
-
         // if (snapshot.connectionState == ConnectionState.waiting) {
         //   return Center(child: CircularProgressIndicator());
         // }
@@ -82,18 +96,20 @@ class _PerfilPageState extends State<PerfilPage> {
 
         // Aqui sim é seguro acessar snapshot.data!
         if (_nome.text.isEmpty) {
-          _nome.text = userController!.user!.displayName!;
+          _nome.text = _userController!.user!.displayName!;
         }
 
-        if (enderecoModel == null) {
-          enderecoModel = EnderecoModel.fromDocument(snapshot.data!.docs.first);
-          _cep.text = enderecoModel!.cep;
-          _rua.text = enderecoModel!.rua;
-          _numero.text = enderecoModel!.numero;
-          _complemento.text = enderecoModel!.complemento;
-          _bairro.text = enderecoModel!.bairro;
-          _cidade.text = enderecoModel!.cidade;
-          _estado.text = enderecoModel!.estado;
+        if (_enderecoModel == null) {
+          _enderecoModel = EnderecoModel.fromDocument(
+            snapshot.data!.docs.first,
+          );
+          _cep.text = _enderecoModel!.cep;
+          _rua.text = _enderecoModel!.rua;
+          _numero.text = _enderecoModel!.numero;
+          _complemento.text = _enderecoModel!.complemento;
+          _bairro.text = _enderecoModel!.bairro;
+          _cidade.text = _enderecoModel!.cidade;
+          _estado.text = _enderecoModel!.estado;
         }
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -150,7 +166,7 @@ class _PerfilPageState extends State<PerfilPage> {
                             ),
                           ),
                         ),
-                        initialValue: userController!.user!.email,
+                        initialValue: _userController!.user!.email,
                         enabled: false,
 
                         style: TextStyle(color: Colors.grey),
@@ -205,7 +221,6 @@ class _PerfilPageState extends State<PerfilPage> {
                             setState(() {});
 
                             // força o rebuild para o botão reaparecer
-                        
                           }
                         },
                       ),
@@ -348,22 +363,22 @@ class _PerfilPageState extends State<PerfilPage> {
                           if (!_form.currentState!.validate()) {
                             return;
                           }
-                          final user = userController!.user!;
+                          final user = _userController!.user!;
 
                           if (_nome.text != user.displayName) {
                             await user.updateDisplayName(_nome.text);
-                            await userController!.setUser(user);
+                            await _userController!.setUser(user);
                             // await user.reload();
                           }
 
-                          enderecoModel!.cep = _cep.text;
-                          enderecoModel!.rua = _rua.text;
-                          enderecoModel!.numero = _numero.text;
-                          enderecoModel!.complemento = _complemento.text;
-                          enderecoModel!.bairro = _bairro.text;
-                          enderecoModel!.cidade = _cidade.text;
-                          enderecoModel!.estado = _estado.text;
-                          await enderecoModel!.update();
+                          _enderecoModel!.cep = _cep.text;
+                          _enderecoModel!.rua = _rua.text;
+                          _enderecoModel!.numero = _numero.text;
+                          _enderecoModel!.complemento = _complemento.text;
+                          _enderecoModel!.bairro = _bairro.text;
+                          _enderecoModel!.cidade = _cidade.text;
+                          _enderecoModel!.estado = _estado.text;
+                          await _enderecoModel!.update();
 
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
@@ -372,9 +387,9 @@ class _PerfilPageState extends State<PerfilPage> {
                             ),
                           );
 
-                           setState(() {});
+                          setState(() {});
                           await Future.delayed(const Duration(seconds: 2));
-                          userController!.setUser(
+                          _userController!.setUser(
                             FirebaseAuth.instance.currentUser!,
                           );
                           Navigator.of(context).pushNamed(HomePage.tag);
@@ -389,5 +404,21 @@ class _PerfilPageState extends State<PerfilPage> {
     );
 
     return Layout.render(topContext, container);
+  }
+
+  Future<QuerySnapshot<Object?>> loadEndereco() async {
+    var endereco = await FirebaseFirestore.instance
+        .collection('endereco')
+        .where('uid', isEqualTo: _userController!.user!.uid)
+        .get();
+    if (endereco.docs.isEmpty) {
+      await EnderecoModel(uid: _userController!.user!.uid).insert();
+
+      endereco = await FirebaseFirestore.instance
+          .collection('endereco')
+          .where('uid', isEqualTo: _userController!.user!.uid)
+          .get();
+    }
+    return endereco;
   }
 }

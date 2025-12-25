@@ -1,7 +1,9 @@
 
 import 'package:amplify_storage_s3/amplify_storage_s3.dart';
+import 'package:app_eyewear/controller/carrinho/carrinho_store.dart';
 import 'package:app_eyewear/controller/users/user_controller.dart';
 import 'package:app_eyewear/view/carrinho/carrinho_page.dart';
+import 'package:app_eyewear/view/carrinho/finaliza_page.dart';
 import 'package:app_eyewear/view/compras/compras_page.dart';
 import 'package:app_eyewear/view/favoritos/favoritos_page.dart';
 import 'package:app_eyewear/view/home/home_page.dart';
@@ -13,6 +15,7 @@ import 'package:app_eyewear/view/login/splash_page.dart';
 import 'package:app_eyewear/view/perfil/perfil_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 
@@ -35,9 +38,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
     
-      providers: [Provider<UserController>(create: (_) => UserController())],
-      child: MaterialApp(
-        //debugShowCheckedModeBanner: false,
+      providers: [
+        Provider<UserController>(create: (_) => UserController()),
+        Provider<CarrinhoStore>(create: (_) => CarrinhoStore())
+        ],
+      child: GetMaterialApp(
+        enableLog: false,
+        debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         theme: ThemeData(
           fontFamily: 'JosefinSans',
@@ -75,6 +82,7 @@ class MyApp extends StatelessWidget {
           FavoritosPage.tag: (context) => FavoritosPage(),
           PerfilPage.tag: (context) => PerfilPage(),
           CarrinhoPage.tag: (context) => CarrinhoPage(),
+          FinalizaPage.tag: (context) => FinalizaPage(),
           ComprasPage.tag: (context) => ComprasPage(),
         },
       ),

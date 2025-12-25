@@ -1,7 +1,6 @@
 import 'package:amplify_flutter/amplify_flutter.dart';
-import 'package:amplify_storage_s3/amplify_storage_s3.dart';
 import 'package:app_eyewear/controller/users/user_controller.dart';
-import 'package:app_eyewear/function.dart';
+import 'package:app_eyewear/function/sums_dates/function.dart';
 import 'package:app_eyewear/model/favorito_model.dart';
 import 'package:app_eyewear/model/produto_model.dart';
 import 'package:app_eyewear/view/produto/produto_page.dart';
