@@ -29,7 +29,7 @@ class _RodaCategoriaState extends State<RodaCategoria>
   SweypDirection? _sweypDirection;
 
   // Controle do item atual
-  int _currentItem = 0;
+  int _currentItem = 2;
 
   @override
   void initState() {
@@ -156,7 +156,7 @@ class _RodaCategoriaState extends State<RodaCategoria>
       ClipRRect(
         //Aqui temos a imagem de fundo da roda
         borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width),
-        child: Image.asset('assets/images/rodape_app.png', fit: BoxFit.cover),
+        child: Image.asset('assets/images/bg-catwheel.png', fit: BoxFit.cover),
       ),
     );
 

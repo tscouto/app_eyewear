@@ -184,9 +184,13 @@ class _CategoriaPageState extends State<CategoriaPage> {
                                 topLeft: Radius.circular(10),
                                 bottomLeft: Radius.circular(10),
                               ),
-                              child: Image.network(
-                                'https://picsum.photos/id/${i + 2}/200/200',
+                              child: Image.asset(
+                                'assets/images/produtos/prod-${i + 1}.jpg',
+                                fit: BoxFit.cover,
                               ),
+                              // child: Image.network(
+                              //   'https://picsum.photos/id/${i + 1}/200/200',
+                              // ),
                               // child: Image.network(produto.imagem!),
                             ),
                             SizedBox(width: 10),
@@ -201,6 +205,7 @@ class _CategoriaPageState extends State<CategoriaPage> {
                                     style: TextStyle(
                                       fontSize: 13,
                                       color: Layout.dark(.8),
+                                      overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
                                   Text(
@@ -208,11 +213,13 @@ class _CategoriaPageState extends State<CategoriaPage> {
                                     style: TextStyle(
                                       color: Layout.primaryLight(),
                                       fontSize: 18,
+                                      overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
                                   Text(
                                     produto.chamada!,
                                     style: TextStyle(color: Layout.dark(.5)),
+                                    overflow: TextOverflow.ellipsis,
                                   ),
                                 ],
                               ),

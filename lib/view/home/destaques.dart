@@ -116,10 +116,11 @@ class HomeDestaques extends StatelessWidget {
                 margin: const EdgeInsets.symmetric(horizontal: 20),
                 width: width,
                 decoration: BoxDecoration(
-                  color: Layout.secondary(0.9),
+                  color: Layout.primaryDark(.1),
                   borderRadius: BorderRadius.circular(25),
                 ),
                 child: Column(
+                  
                   children: [
                     // 🔹 IMAGEM + FAVORITO
                     Expanded(
@@ -195,6 +196,7 @@ class HomeDestaques extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.all(10),
                       child: Column(
+                        
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(

@@ -52,9 +52,15 @@ abstract class _CarrinhoStore with Store {
     frete = null;
   }
 
+  @action
+  limpar() {
+    items.clear();
+    frete = null;
+  }
+
   CarrinhoItemStore? _getItem(CarrinhoItemStore item) {
     for (var i in items) {
-      if (i.produto!.docRef!.id == item.produto!.docRef!.id &&
+      if (i.produto.docRef!.id == item.produto.docRef!.id &&
           i.cor == item.cor) {
         return i;
       }

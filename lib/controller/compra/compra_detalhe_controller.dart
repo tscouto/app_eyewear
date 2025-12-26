@@ -22,7 +22,9 @@ class CompraDetalheController {
 
     items = <ItemModel>[];
     for (var doc in query.docs) {
-      var item = await ItemModel.fromDocument(doc);
+      var item =  ItemModel.fromDocument(doc);
+
+      await item.loadProduto();
       items.add(item);
     }
     return this;

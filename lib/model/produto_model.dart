@@ -18,6 +18,7 @@ class ProdutoModel extends AbstractModel {
   final String? chamada;
   final String? detalhe;
   final double? preco;
+ 
   final String? imagem;
   final bool? destaque;
 
@@ -39,7 +40,8 @@ class ProdutoModel extends AbstractModel {
       chamada = json['chamada'].toString(),
       detalhe = json['detalhe'].toString(),
       preco = (json['preco'] as num?)?.toDouble(),
-      imagem = json['imagem'].toString(),
+       imagem = json['imagem'].toString(),
+     
       destaque = json['destaque'],
       fkCategoriaRef = json['fk_categoria'],
       excluido = json['excluido'] ?? false;

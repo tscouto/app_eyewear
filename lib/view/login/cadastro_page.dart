@@ -1,4 +1,5 @@
 import 'package:app_eyewear/controller/users/user_controller.dart';
+import 'package:app_eyewear/function/sums_dates/function.dart';
 
 import 'package:app_eyewear/view/layout.dart';
 import 'package:app_eyewear/view/login/login_page.dart';
@@ -206,10 +207,8 @@ class _CadastroPageState extends State<CadastroPage> {
                                       );
 
                                   if (error != null) {
-                                    // ignore: use_build_context_synchronously
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(content: Text(error)),
-                                    );
+                                   
+                                   snackBarDanger(error);
                                     return;
                                   }
 

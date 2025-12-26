@@ -1,4 +1,5 @@
 import 'package:app_eyewear/controller/users/user_controller.dart';
+import 'package:app_eyewear/function/sums_dates/function.dart';
 import 'package:app_eyewear/view/home/home_page.dart';
 import 'package:app_eyewear/view/layout.dart';
 import 'package:app_eyewear/view/login/cadastro_page.dart';
@@ -150,12 +151,7 @@ class LoginPage extends StatelessWidget {
                                         );
 
                                     if (error != null) {
-                                      ScaffoldMessenger.of(
-                                        // ignore: use_build_context_synchronously
-                                        context,
-                                      ).showSnackBar(
-                                        SnackBar(content: Text(error)),
-                                      );
+                                    snackBarDanger(error);
                                     } else {
                                       ScaffoldMessenger.of(
                                         // ignore: use_build_context_synchronously
@@ -165,7 +161,7 @@ class LoginPage extends StatelessWidget {
                                           content: Text(
                                             'Login realizado com sucesso!',
                                           ),
-                                         
+
                                           duration: Duration(seconds: 2),
                                         ),
                                       );
@@ -177,7 +173,7 @@ class LoginPage extends StatelessWidget {
                                         // ignore: use_build_context_synchronously
                                         context,
                                       ).popUntil((route) => route.isFirst);
-                                       Navigator.of(
+                                      Navigator.of(
                                         // ignore: use_build_context_synchronously
                                         context,
                                       ).pushReplacementNamed(HomePage.tag);

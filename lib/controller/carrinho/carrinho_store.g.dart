@@ -79,6 +79,18 @@ mixin _$CarrinhoStore on _CarrinhoStore, Store {
   }
 
   @override
+  dynamic limpar() {
+    final _$actionInfo = _$_CarrinhoStoreActionController.startAction(
+      name: '_CarrinhoStore.limpar',
+    );
+    try {
+      return super.limpar();
+    } finally {
+      _$_CarrinhoStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   dynamic removeItem(CarrinhoItemStore item) {
     final _$actionInfo = _$_CarrinhoStoreActionController.startAction(
       name: '_CarrinhoStore.removeItem',

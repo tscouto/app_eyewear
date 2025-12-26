@@ -269,6 +269,7 @@ class _ProdutoPageState extends State<ProdutoPage> {
     var result = ProdutoModel.fromDocument(docSnp);
     imagens = [];
     imagens.add(result.imagem!);
+  
 
     var fotos = await FirebaseFirestore.instance
         .collection('foto')

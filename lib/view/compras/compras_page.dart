@@ -73,6 +73,16 @@ class ComprasPage extends StatelessWidget {
                     color: Layout.primary(),
                   ),
                 ),
+                onTap: () {
+                  {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            CompraDetalhePage(docSnp.reference),
+                      ),
+                    );
+                  }
+                },
               ),
             );
           },

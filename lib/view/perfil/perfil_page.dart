@@ -1,4 +1,5 @@
 import 'package:app_eyewear/controller/users/user_controller.dart';
+import 'package:app_eyewear/function/sums_dates/function.dart';
 import 'package:app_eyewear/model/endereco_model.dart';
 import 'package:app_eyewear/view/home/home_page.dart';
 import 'package:app_eyewear/view/layout.dart';
@@ -7,8 +8,6 @@ import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:get/get_navigation/src/extension_navigation.dart';
-import 'package:get/instance_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 
@@ -52,13 +51,7 @@ class _PerfilPageState extends State<PerfilPage> {
     super.initState();
     if (widget.snackbarMessage != null) {
       SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-        Get.snackbar(
-          'Aviso',
-          duration: const Duration(seconds: 5),
-          widget.snackbarMessage!,
-          backgroundColor: Layout.secondaryHighLight(),
-          margin: const EdgeInsets.all(20),
-        );
+        snackBarWarning(widget.snackbarMessage!);
       });
     }
     _enderecoModel = widget._enderecoModel;
@@ -380,12 +373,7 @@ class _PerfilPageState extends State<PerfilPage> {
                           _enderecoModel!.estado = _estado.text;
                           await _enderecoModel!.update();
 
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('Endereço atualizado com sucesso'),
-                              backgroundColor: Colors.green,
-                            ),
-                          );
+                          snackBarSucess('Endereço atualizado com sucesso');
 
                           setState(() {});
                           await Future.delayed(const Duration(seconds: 2));

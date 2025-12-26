@@ -1,4 +1,5 @@
 import 'package:app_eyewear/controller/users/user_controller.dart';
+import 'package:app_eyewear/function/sums_dates/function.dart';
 import 'package:app_eyewear/view/layout.dart';
 import 'package:app_eyewear/view/login/cadastro_page.dart';
 import 'package:app_eyewear/view/login/login_page.dart';
@@ -120,14 +121,11 @@ class LoginRecuperarPage extends StatelessWidget {
                                         );
 
                                     // ignore: use_build_context_synchronously
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text(
-                                          (error != null)
-                                              ? error
-                                              : 'Se o email estiver cadastrado, você receberá um link para redefinir sua senha.'
-                                        ),
-                                      ),
+
+                                    snackBarInfo(
+                                      (error != null)
+                                          ? error
+                                          : 'Se o email estiver cadastrado, você receberá um link para redefinir sua senha.',
                                     );
                                   }
                                 },

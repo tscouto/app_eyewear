@@ -1,9 +1,14 @@
 import 'package:app_eyewear/constants.dart';
+import 'package:app_eyewear/controller/carrinho/carrinho_store.dart';
+import 'package:app_eyewear/controller/finalizacao_compra/finaliza_compra_controller.dart';
+import 'package:app_eyewear/controller/users/user_controller.dart';
+import 'package:app_eyewear/function/sums_dates/function.dart';
+import 'package:app_eyewear/view/compras/compra_detalhe_page.dart';
 import 'package:app_eyewear/view/layout.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get/get_navigation/get_navigation.dart';
-import 'package:get/utils.dart';
+import 'package:provider/provider.dart';
+
 
 class FinalizaPage extends StatefulWidget {
   static String tag = '/carrinho-finaliza';
@@ -19,6 +24,14 @@ class _FinalizaPageState extends State<FinalizaPage> {
 
   @override
   Widget build(BuildContext context) {
+    var userController = Provider.of<UserController>(context);
+    var carrinho = Provider.of<CarrinhoStore>(context);
+
+    var finalizaController = FinalizaCompraController(
+      carrinho: carrinho,
+      uid: userController.user!.uid,
+    );
+
     var content = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -117,19 +130,30 @@ class _FinalizaPageState extends State<FinalizaPage> {
                 child: ElevatedButton(
                   onPressed: _loading
                       ? null
-                      : () {
+                      : () async {
                           if (_tipoPagto == null) {
-                            Get.snackbar(
-                              'Atenção!',
-                              'Selecione o tipo de pagamento',
-                              backgroundColor: Layout.secondaryHighLight(),
-                              duration: Duration(seconds: 2),
-                            );
+                            snackBarDanger('Selecione o método de pagamento');
                             return;
                           }
                           setState(() {
                             _loading = true;
                           });
+                          if (!(await finalizaController.isValid())) {
+                            Navigator.of(context).pop();
+                            return;
+                          }
+                          var compraRef = await finalizaController.save(_tipoPagto!);
+                          carrinho.limpar();
+                          Navigator.of(
+                            context,
+                          ).popUntil((route) => route.isFirst);
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return CompraDetalhePage(compraRef);
+                              },
+                            ),
+                          );
                         },
                   style: ElevatedButton.styleFrom(
                     textStyle: TextStyle(color: Layout.light()),

@@ -272,11 +272,7 @@ class _CarrinhoPageState extends State<CarrinhoPage> {
                         width: 50,
                         height: 50,
                       ),
-                      // Image.network(
-                      //   item.produto.imagem as String,
-                      //   width: 50,
-                      //   height: 50,
-                      // ),
+                      //_buildProdutoImagem(item.produto.imagem!),
                       SizedBox(width: 10),
                       Expanded(
                         child: Column(
@@ -379,40 +375,43 @@ class _CarrinhoPageState extends State<CarrinhoPage> {
             return AlertDialog(
               contentPadding: const EdgeInsets.symmetric(horizontal: 10),
               title: Text('Selecione o frete'),
-              content: SizedBox(
-                width: double.maxFinite,
-                height: 400,
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: snapshot.data!.length,
-                  itemBuilder: (context, index) {
-                    var item = snapshot.data![index];
-                    return Container(
-                      decoration: BoxDecoration(
-                        color: Colors.grey[100],
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      margin: const EdgeInsets.all(5),
-                      child: ListTile(
-                        leading: CircleAvatar(
-                          child: Text(item['nome'][0]),
-                          backgroundColor: Layout.secondary(),
-                          foregroundColor: Layout.light(),
+              content: Container(
+                width: MediaQuery.of(context).size.width,
+                child: SizedBox(
+                  width: double.maxFinite,
+                  height: 400,
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: snapshot.data!.length,
+                    itemBuilder: (context, index) {
+                      var item = snapshot.data![index];
+                      return Container(
+                        decoration: BoxDecoration(
+                          color: Colors.grey[100],
+                          borderRadius: BorderRadius.circular(10),
                         ),
-                        title: Text(item['nome']),
-                        subtitle: Text((item['valor'] as double).toBRL()),
-                        trailing: Text('${item['prazo']} dias'),
-                        onTap: () {
-                          _carrinho.frete = CarrinhoFreteStore(
-                            nome: item['nome'],
-                            valor: item['valor'],
-                            prazo: item['prazo'],
-                          );
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                    );
-                  },
+                        margin: const EdgeInsets.all(5),
+                        child: ListTile(
+                          leading: CircleAvatar(
+                            child: Text(item['nome'][0]),
+                            backgroundColor: Layout.secondary(),
+                            foregroundColor: Layout.light(),
+                          ),
+                          title: Text(item['nome']),
+                          subtitle: Text((item['valor'] as double).toBRL()),
+                          trailing: Text('${item['prazo']} dias'),
+                          onTap: () {
+                            _carrinho.frete = CarrinhoFreteStore(
+                              nome: item['nome'],
+                              valor: item['valor'],
+                              prazo: item['prazo'],
+                            );
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ),
               actions: <Widget>[
@@ -576,3 +575,18 @@ IconData getFreteIcon(String nomeFrete) {
       return FontAwesomeIcons.truck; // ícone padrão
   }
 }
+
+Widget _buildProdutoImagem(String imagem) {
+  // Caminho completo da imagem na pasta produtos
+  //final caminhoCompleto = 'images/$imagem';
+ final path = 'assets/images/${imagem.replaceAll('//', '/')}';
+  return Image.asset(
+    path,
+    width: 50,
+    height: 50,
+    fit: BoxFit.cover,
+  );
+}
+
+
+

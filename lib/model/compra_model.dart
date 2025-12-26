@@ -24,9 +24,9 @@ class CompraModel extends AbstractModel {
   double? valorItens;
   double? valorTotal;
 
-  int? cep;
+  String? cep;
   String? rua;
-  int? numero;
+  String? numero;
   String? complemento;
   String? bairro;
   String? cidade;
@@ -66,13 +66,13 @@ class CompraModel extends AbstractModel {
       valorFrete = double.parse(json['valor_frete'].toString()),
       valorItens = double.parse(json['valor_itens'].toString()),
       valorTotal = double.parse(json['valor_total'].toString()),
-      cep = json['cep'],
-      rua = json['rua'],
-      numero = json['numero'],
-      complemento = json['complemento'],
-      bairro = json['bairro'],
-      cidade = json['cidade'],
-      estado = json['estado'],
+      cep = json['cep'].toString(),
+      rua = json['rua'].toString(),
+      numero = json['numero'].toString(),
+      complemento = json['complemento'].toString(),
+      bairro = json['bairro'].toString(),
+      cidade = json['cidade'].toString(),
+      estado = json['estado'].toString(),
       excluido = json['excluido'];
 
   CompraModel.fromDocument(DocumentSnapshot doc)
