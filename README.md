@@ -90,3 +90,27 @@ A estrutura é modular e preparada para integração com APIs externas e novos s
 ## 📄 Licença
 
 Projeto para fins educacionais e de aprendizado.
+
+
+
+##  📚 Referências e Documentações Utilizadas
+
+# Flutter
+-- https://flutter.dev/
+-- Dart
+-- https://dart.dev/
+
+# Firebase
+-- https://firebase.google.com/
+
+# Firebase para Flutter
+-- https://firebase.flutter.dev/
+
+# Provider
+-- https://pub.dev/packages/provider
+
+# Cloud Firestore
+-- https://pub.dev/packages/cloud_firestore
+
+# Firebase Auth
+-- https://pub.dev/packages/firebase_auth
