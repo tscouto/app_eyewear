@@ -1,35 +1,36 @@
-
 # App Eyewear 👓
 
 ## 📌 Sobre o Projeto
-O **App Eyewear** é uma aplicação desenvolvida com foco em gerenciamento e visualização de produtos óticos (óculos e acessórios). 
-O sistema permite organização de itens, cadastro, manipulação de dados e estrutura preparada para backend web.
+O **App Eyewear** é uma aplicação desenvolvida em **Flutter**, com foco em gerenciamento e visualização de produtos óticos, como óculos e acessórios.
 
-O projeto foi desenvolvido com Django, seguindo boas práticas de organização, separação de responsabilidades e estrutura modular.
+O sistema permite organização de itens, cadastro de produtos, manipulação de dados e integração com serviços em nuvem utilizando o **Firebase**.
 
-Repositório oficial:
+O projeto foi estruturado seguindo boas práticas de desenvolvimento mobile, organização de código e separação de responsabilidades.
+
+Repositório oficial:  
 https://github.com/tscouto/app_eyewear
 
 ---
 
 ## 🚀 Tecnologias Utilizadas
 
-- Python 3.x
-- Django
-- SQLite3 (banco padrão do Django)
+- Flutter
+- Dart
+- Firebase
 - HTML5
 - CSS3
 - JavaScript (quando necessário)
-- Django ORM
 
 ---
 
 ## 📚 Principais Bibliotecas
 
-- django
-- asgiref
-- sqlparse
-- tzdata (Windows)
+- flutter
+- firebase_core
+- cloud_firestore
+- firebase_auth
+- provider
+- http
 
 As dependências podem variar de acordo com o ambiente virtual.
 
@@ -40,8 +41,8 @@ As dependências podem variar de acordo com o ambiente virtual.
 - Cadastro de produtos
 - Listagem de itens
 - Organização de dados
-- Estrutura preparada para expansão (API ou frontend separado)
-- Utilização de ORM para manipulação do banco de dados
+- Estrutura preparada para expansão 
+- Manipulação de dados em tempo real
 
 ---
 
@@ -54,84 +55,37 @@ git clone https://github.com/tscouto/app_eyewear
 cd app_eyewear
 ```
 
-### 2️⃣ Criar e ativar ambiente virtual
-
-Windows:
-
 ```bash
-python -m venv venv
-venv\Scripts\activate
-```
-
-Linux/Mac:
-
-```bash
-python3 -m venv venv
-source venv/bin/activate
-```
-
-### 3️⃣ Instalar dependências
-
-```bash
-pip install django
-```
-
-Ou, caso exista:
-
-```bash
-pip install -r requirements.txt
-```
-
-### 4️⃣ Aplicar migrações
-
-```bash
-python manage.py migrate
-```
-
-### 5️⃣ Criar superusuário (opcional)
-
-```bash
-python manage.py createsuperuser
-```
-
-### 6️⃣ Rodar o servidor
-
-```bash
-python manage.py runserver
-```
-
-Acessar no navegador:
-
-```
-http://127.0.0.1:8000/
+flutter pub get
 ```
 
 ---
+
 
 ## 🗂️ Estrutura do Projeto (Resumo)
 
-- manage.py → Gerenciador principal do Django
-- settings.py → Configurações do projeto
-- models.py → Estrutura do banco de dados
-- views.py → Regras de negócio
-- templates/ → Interface HTML
-- static/ → Arquivos CSS/JS
+- lib/ → Código principal da aplicação
+- models/ → Estrutura de dados
+- services/ → Integrações e regras de negócio
+- screens/ → Telas da aplicação
+- widgets/ → Componentes reutilizáveis
+- firebase/ → Configurações e integrações Firebase
 
 ---
 
-## 📦 Banco de Dados
+## ☁️ Banco de Dados
 
-Por padrão, o projeto utiliza SQLite (banco embarcado do Django).
-Para produção, recomenda-se utilizar PostgreSQL ou MySQL.
+O projeto utiliza o Firebase como backend e armazenamento de dados, podendo utilizar:
+- Cloud Firestore
+- Firebase Authentication
+- Firebase Storage
 
 ---
 
 ## 🧠 Observações Técnicas
 
-O projeto é estruturado como aplicação backend tradicional utilizando Django Templates.
-Pode ser facilmente adaptado para arquitetura moderna utilizando Django REST Framework + React, Vue ou outro frontend separado.
-
----
+O projeto foi desenvolvido utilizando Flutter para criação de aplicações multiplataforma, permitindo futura expansão para Android, iOS e Web.
+A estrutura é modular e preparada para integração com APIs externas e novos serviços Firebase.
 
 ## 📄 Licença
 
